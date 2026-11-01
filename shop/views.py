@@ -13,6 +13,45 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 
+
+import os
+import requests
+
+
+def send_whatsapp(phone, amount, pts, total, remaining):
+    token = os.environ.get('WA_TOKEN')
+    phone_id = os.environ.get('WA_PHONE_ID')
+    if not token or not phone_id:
+        return False  # keys set nahi hain to chupchap skip
+
+    url = f"https://graph.facebook.com/v21.0/{phone_id}/messages"
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": f"91{phone}",
+        "type": "template",
+        "template": {
+            "name": "points_update",
+            "language": {"code": "en"},
+            "components": [{
+                "type": "body",
+                "parameters": [
+                    {"type": "text", "text": f"{amount:g}"},
+                    {"type": "text", "text": str(pts)},
+                    {"type": "text", "text": str(total)},
+                    {"type": "text", "text": str(remaining)},
+                ],
+            }],
+        },
+    }
+    try:
+        r = requests.post(url, json=payload,
+                          headers={"Authorization": f"Bearer {token}"}, timeout=10)
+        return r.ok
+    except requests.RequestException:
+        return False
+
+
+
 # Create your views here.
 
 def get_points(amount):

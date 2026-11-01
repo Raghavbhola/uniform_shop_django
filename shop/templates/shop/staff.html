@@ -214,7 +214,8 @@
             '<div class="stat"><b>' + d.points_earned + '</b><span>Aaj ke points</span></div>' +
             '<div class="stat"><b>' + d.total_points + '</b><span>Total points</span></div>' +
           '</div>' +
-          '<a class="wa" href="' + d.whatsapp_link + '" target="_blank">\uD83D\uDCF2 WhatsApp par message bhejo</a>';
+          (d.whatsapp_sent ? '<div class="hint">✅ API se bhej diya gaya</div>' : '') +
+          '<a class="wa" href="' + d.whatsapp_link + '" target="_blank">📲 WhatsApp par message bhejo</a>'
         amountEl.value = '';
         previewEl.style.display = 'none';
         phoneEl.focus();
