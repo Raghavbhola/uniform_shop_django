@@ -1,114 +1,853 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Manage Schools | Shree Krishan Uniform</title>
-  <style>
-    * { box-sizing:border-box; }
-    body { margin:0; font-family:'Segoe UI',Arial,sans-serif; background:#f1f5f9; color:#1e293b; }
-    .topbar { background:linear-gradient(135deg,#1e3a8a,#2563eb); color:#fff; padding:14px 18px; display:flex; align-items:center; gap:14px; }
-    .topbar a { color:#fff; text-decoration:none; background:rgba(255,255,255,.18); padding:7px 14px; border-radius:20px; font-size:14px; }
-    .topbar h1 { margin:0; font-size:18px; }
-    .wrap { max-width:520px; margin:18px auto; padding:0 14px 40px; }
-    .card { background:#fff; border-radius:14px; padding:18px; margin-bottom:14px; box-shadow:0 2px 10px rgba(15,23,42,.08); }
-    .card h2 { margin:0 0 12px; font-size:17px; }
-    label { font-size:13px; color:#64748b; display:block; margin-bottom:4px; }
-    input, select { width:100%; padding:12px; font-size:15px; border:1.5px solid #cbd5e1; border-radius:10px; margin-bottom:12px; background:#fff; }
-    button.main { width:100%; padding:13px; font-size:16px; font-weight:600; color:#fff; background:#2563eb; border:0; border-radius:10px; cursor:pointer; }
-    .flash { padding:11px 14px; border-radius:10px; margin-bottom:12px; font-size:14px; }
-    .flash.success { background:#E8F5E9; color:#2E7D32; }
-    .flash.error { background:#FFEBEE; color:#C62828; }
-    .school h3 { margin:0 0 2px; color:#1e3a8a; }
-    .school small { color:#64748b; }
-    .item { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid #e2e8f0; font-size:14px; }
-    .item:last-child { border-bottom:0; }
-    .item img, .item .noimg { width:52px; height:52px; border-radius:8px; object-fit:cover; background:#e2e8f0; flex:none; display:flex; align-items:center; justify-content:center; }
-    .item .info { flex:1; min-width:0; }
-    .item form { margin:0; }
-    .del { background:#fee2e2; color:#b91c1c; border:0; border-radius:8px; padding:7px 11px; cursor:pointer; }
-    .hint { font-size:12px; color:#94a3b8; margin-top:-6px; margin-bottom:12px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08275f">
+<title>Manage Schools | Shree Krishan Uniform</title>
+
+<style>
+:root {
+    --navy:#08275f;
+    --blue:#1557b7;
+    --blue2:#2675df;
+    --gold:#ffc928;
+    --green:#16a34a;
+    --bg:#f4f8ff;
+    --ink:#14264b;
+    --muted:#718096;
+    --border:#e3ebf6;
+    --shadow:0 12px 35px rgba(8,39,95,.08);
+}
+
+* {
+    box-sizing:border-box;
+}
+
+body {
+    margin:0;
+    font-family:'Segoe UI',Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+}
+
+/* HEADER */
+
+.topbar {
+    background:linear-gradient(115deg,#061d49,#1458b8);
+    color:white;
+    box-shadow:0 5px 22px rgba(8,39,95,.15);
+}
+
+.nav {
+    max-width:850px;
+    margin:auto;
+    min-height:75px;
+    padding:12px 18px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.topbar a {
+    color:white;
+    text-decoration:none;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.2);
+    padding:9px 14px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:700;
+    transition:.25s;
+}
+
+.topbar a:hover {
+    background:rgba(255,255,255,.3);
+    transform:translateY(-2px);
+}
+
+.brand {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:17px;
+    font-weight:800;
+}
+
+.brand-icon {
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    background:white;
+    color:var(--blue);
+    border-radius:13px;
+    font-size:23px;
+}
+
+.brand small {
+    display:block;
+    font-size:11px;
+    color:#cfe2ff;
+    font-weight:500;
+    margin-top:3px;
+}
+
+/* MAIN */
+
+.wrap {
+    max-width:650px;
+    margin:30px auto;
+    padding:0 15px 45px;
+}
+
+.page-heading {
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.badge {
+    display:inline-block;
+    background:#e2eeff;
+    color:var(--blue);
+    padding:7px 14px;
+    border-radius:30px;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.page-heading h1 {
+    color:var(--navy);
+    font-size:29px;
+    margin:12px 0 5px;
+}
+
+.page-heading p {
+    color:var(--muted);
+    font-size:14px;
+    margin:0;
+}
+
+/* CARDS */
+
+.card {
+    background:white;
+    border:1px solid var(--border);
+    border-radius:21px;
+    padding:23px;
+    margin-bottom:19px;
+    box-shadow:var(--shadow);
+    animation:fadeUp .5s ease both;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity:0;
+        transform:translateY(15px);
+    }
+    to {
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.card-heading {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.card-icon {
+    width:46px;
+    height:46px;
+    flex:none;
+    display:grid;
+    place-items:center;
+    background:#eaf2ff;
+    border-radius:14px;
+    font-size:23px;
+}
+
+.card-heading h2 {
+    margin:0;
+    font-size:18px;
+    color:var(--navy);
+}
+
+.card-heading p {
+    margin:4px 0 0;
+    font-size:12px;
+    color:var(--muted);
+}
+
+/* FORMS */
+
+label {
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    color:#344765;
+    margin-bottom:7px;
+}
+
+input,select {
+    width:100%;
+    padding:13px 14px;
+    border:1.5px solid #d5e0ef;
+    border-radius:12px;
+    font-size:15px;
+    outline:none;
+    background:#fbfdff;
+    color:var(--ink);
+    margin-bottom:16px;
+    transition:.2s;
+}
+
+input:focus,select:focus {
+    border-color:var(--blue2);
+    box-shadow:0 0 0 4px rgba(38,117,223,.1);
+    background:white;
+}
+
+input::placeholder {
+    color:#9aa8bc;
+}
+
+input[type=file] {
+    background:#f8fbff;
+    padding:11px;
+    font-size:13px;
+}
+
+.hint {
+    font-size:12px;
+    color:#8996aa;
+    margin-top:-10px;
+    margin-bottom:17px;
+}
+
+/* BUTTONS */
+
+button.main {
+    width:100%;
+    padding:14px;
+    font-size:15px;
+    font-weight:800;
+    color:white;
+    background:linear-gradient(110deg,#1557b7,#2675df);
+    border:0;
+    border-radius:13px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+button.main:hover {
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(21,87,183,.23);
+}
+
+button.main:active {
+    transform:scale(.98);
+}
+
+/* MESSAGES */
+
+.flash {
+    padding:13px 15px;
+    border-radius:12px;
+    margin-bottom:15px;
+    font-size:14px;
+    font-weight:600;
+    animation:fadeUp .3s ease;
+}
+
+.flash.success {
+    background:#e8f8ed;
+    color:#168044;
+    border:1px solid #bce8ca;
+}
+
+.flash.error {
+    background:#fff0f0;
+    color:#bd3030;
+    border:1px solid #f2c7c7;
+}
+
+/* SCHOOL LIST */
+
+.school-section {
+    margin-bottom:23px;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--border);
+}
+
+.school-section:last-child {
+    border-bottom:0;
+    margin-bottom:0;
+}
+
+.school-title {
+    display:flex;
+    align-items:flex-start;
+    gap:11px;
+    margin-bottom:12px;
+}
+
+.school-symbol {
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    background:#fff3cc;
+    border-radius:12px;
+    font-size:21px;
+    flex:none;
+}
+
+.school-title h3 {
+    margin:0;
+    font-size:16px;
+    color:var(--navy);
+}
+
+.school-title small {
+    display:block;
+    color:var(--muted);
+    font-size:12px;
+    margin-top:3px;
+}
+
+.item {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px;
+    border:1px solid #edf1f7;
+    background:#fbfdff;
+    border-radius:14px;
+    margin-bottom:9px;
+    transition:.2s;
+}
+
+.item:hover {
+    border-color:#b9d2f3;
+    transform:translateX(3px);
+}
+
+.item img,
+.item .noimg {
+    width:58px;
+    height:58px;
+    border-radius:11px;
+    object-fit:cover;
+    background:#eaf2ff;
+    flex:none;
+}
+
+.item .noimg {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:25px;
+}
+
+.info {
+    flex:1;
+    min-width:0;
+    font-size:13px;
+    color:#64748b;
+    line-height:1.7;
+    overflow-wrap:anywhere;
+}
+
+.info b {
+    color:var(--navy);
+    font-size:14px;
+}
+
+.price {
+    color:var(--blue);
+    font-weight:800;
+}
+
+/* DELETE */
+
+.item form {
+    margin:0;
+}
+
+.del {
+    background:#fff0f0;
+    color:#c03939;
+    border:1px solid #ffd5d5;
+    border-radius:9px;
+    padding:8px 11px;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.del:hover {
+    background:#dc2626;
+    color:white;
+}
+
+/* EMPTY STATE */
+
+.empty {
+    text-align:center;
+    padding:25px 10px;
+    color:#8996aa;
+    font-size:13px;
+    background:#f8fbff;
+    border-radius:13px;
+    border:1px dashed #d5e0ef;
+}
+
+.empty span {
+    display:block;
+    font-size:30px;
+    margin-bottom:7px;
+}
+
+/* COMMON PRODUCTS */
+
+.common-heading {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:var(--navy);
+    margin:20px 0 13px;
+    font-size:16px;
+}
+
+.common-heading span {
+    background:#fff2c9;
+    padding:9px;
+    border-radius:11px;
+}
+
+/* FOOTER */
+
+.footer {
+    text-align:center;
+    color:#8996aa;
+    font-size:12px;
+    padding:10px 0;
+}
+
+.footer strong {
+    color:var(--navy);
+}
+
+/* MOBILE */
+
+@media(max-width:550px) {
+
+    .nav {
+        padding:11px 12px;
+        gap:9px;
+    }
+
+    .topbar a {
+        padding:8px 10px;
+        font-size:12px;
+    }
+
+    .brand {
+        font-size:13px;
+        gap:7px;
+    }
+
+    .brand-icon {
+        width:36px;
+        height:36px;
+        font-size:19px;
+    }
+
+    .wrap {
+        margin-top:22px;
+    }
+
+    .page-heading h1 {
+        font-size:24px;
+    }
+
+    .card {
+        padding:19px 16px;
+        border-radius:18px;
+    }
+
+    .item {
+        gap:9px;
+        padding:9px;
+    }
+
+    .item img,.item .noimg {
+        width:49px;
+        height:49px;
+    }
+
+    .del {
+        padding:7px 8px;
+        font-size:11px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    *,*::before,*::after {
+        animation:none!important;
+        transition:none!important;
+    }
+}
+</style>
 </head>
+
 <body>
-  <div class="topbar">
-    <a href="/">&larr; Home</a>
-    <h1>Manage Schools</h1>
-  </div>
 
-  <div class="wrap">
-    {% if messages %}{% for m in messages %}<div class="flash {{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
+<!-- HEADER -->
 
-    <div class="card">
-      <h2>1. Add New school</h2>
-      <form method="post">{% csrf_token %}
-        <input type="hidden" name="action" value="add_school">
-        <label>School Name</label>
-        <input name="name" placeholder="Ex. DAV Public School" required>
-        <label>Area (optional)</label>
-        <input name="area" placeholder="Ex. Jagadhri">
-        <button class="main">Add School</button>
-      </form>
-    </div>
+<header class="topbar">
+    <div class="nav">
 
-    <div class="card">
-      <h2>2. Add your School Dress</h2>
-      <form method="post" enctype="multipart/form-data">{% csrf_token %}
-        <input type="hidden" name="action" value="add_product">
-        <label>School</label>
-        <select name="school">
-          <option value="">For All Schools (like:- socks, bag, dress etc.)</option>
-          {% for s in schools %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}
-        </select>
-        <label>Item Name</label>
-        <input name="name" placeholder="Shirt, Trouser, Girls Dress, Tie..." required>
-        <label>Class (optional)</label>
-        <input name="class_group" placeholder="Ex. Nursery - 5th">
-        <label>Sizes (optional)</label>
-        <input name="sizes" placeholder="Ex. 22, 24, 26, 28">
-        <label>Price (&#8377;)</label>
-        <input name="price" type="number" step="0.01" min="1" placeholder="Ex. 320" required>
-        <label>Dress ki photo (optional)</label>
-        <input name="image" type="file" accept="image/*">
-        <div class="hint">Phone se seedha photo bhi le sakte ho. Maximum 5 MB.</div>
-        <button class="main">Dress add karo</button>
-      </form>
-    </div>
+        <a href="/">← Home</a>
 
-    <div class="card">
-      <h2>Abhi list mein kya hai</h2>
-      {% for s in schools %}
-        <div class="school" style="margin-bottom:14px">
-          <h3>{{ s.name }}</h3><small>{{ s.area }}</small>
-          {% for p in s.products.all %}
-            <div class="item">
-              {% if p.image %}<img src="{{ p.image.url }}" alt="">{% else %}<div class="noimg">&#128085;</div>{% endif %}
-              <div class="info"><b>{{ p.name }}</b> {{ p.class_group }}<br>&#8377;{{ p.price }} {% if p.sizes %}| {{ p.sizes }}{% endif %}</div>
-              <form method="post" onsubmit="return confirm('Hata dein?')">{% csrf_token %}
-                <input type="hidden" name="action" value="delete_product">
-                <input type="hidden" name="product_id" value="{{ p.id }}">
-                <button class="del">Hata do</button>
-              </form>
-            </div>
-          {% empty %}<div style="color:#94a3b8;font-size:14px">Abhi koi dress add nahi hui.</div>{% endfor %}
+        <div class="brand">
+            <span class="brand-icon">🏫</span>
+            <span>
+                Shree Krishan Uniform
+                <small>School & Product Management</small>
+            </span>
         </div>
-      {% empty %}<div style="color:#94a3b8">Abhi koi school nahi hai.</div>{% endfor %}
 
-      {% if common %}
-        <h3 style="color:#1e3a8a;margin:6px 0">For All School</h3>
-        {% for p in common %}
-          <div class="item">
-            {% if p.image %}<img src="{{ p.image.url }}" alt="">{% else %}<div class="noimg">&#127890;</div>{% endif %}
-            <div class="info"><b>{{ p.name }}</b><br>&#8377;{{ p.price }}</div>
-            <form method="post" onsubmit="return confirm('Hata dein?')">{% csrf_token %}
-              <input type="hidden" name="action" value="delete_product">
-              <input type="hidden" name="product_id" value="{{ p.id }}">
-              <button class="del">Hata do</button>
-            </form>
-          </div>
-        {% endfor %}
-      {% endif %}
     </div>
-  </div>
+</header>
+
+
+<main class="wrap">
+
+    <div class="page-heading">
+        <span class="badge">⚙️ ADMIN PANEL</span>
+        <h1>Manage Schools</h1>
+        <p>Add schools, manage uniforms and update product lists.</p>
+    </div>
+
+
+    <!-- DJANGO MESSAGES -->
+
+    {% if messages %}
+        {% for m in messages %}
+            <div class="flash {{ m.tags }}">
+                {% if 'success' in m.tags %}✅{% else %}⚠️{% endif %}
+                {{ m }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+    <!-- ADD SCHOOL -->
+
+    <section class="card">
+
+        <div class="card-heading">
+            <div class="card-icon">🏫</div>
+            <div>
+                <h2>Add New School</h2>
+                <p>Register a school in your uniform store.</p>
+            </div>
+        </div>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="action" value="add_school">
+
+            <label>🏫 School Name</label>
+            <input
+                name="name"
+                placeholder="e.g. DAV Public School"
+                required
+            >
+
+            <label>📍 Area (Optional)</label>
+            <input
+                name="area"
+                placeholder="e.g. Jagadhri"
+            >
+
+            <button class="main" type="submit">
+                ➕ Add School
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- ADD PRODUCT -->
+
+    <section class="card">
+
+        <div class="card-heading">
+            <div class="card-icon">👕</div>
+            <div>
+                <h2>Add School Uniform</h2>
+                <p>Add uniforms and accessories with prices.</p>
+            </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="action" value="add_product">
+
+            <label>🏫 Select School</label>
+
+            <select name="school">
+                <option value="">🌍 For All Schools (Socks, Bags, etc.)</option>
+
+                {% for s in schools %}
+                    <option value="{{ s.id }}">{{ s.name }}</option>
+                {% endfor %}
+
+            </select>
+
+
+            <label>👕 Item Name</label>
+
+            <input
+                name="name"
+                placeholder="Shirt, Trouser, Girls Dress, Tie..."
+                required
+            >
+
+
+            <label>📚 Class (Optional)</label>
+
+            <input
+                name="class_group"
+                placeholder="e.g. Nursery - 5th"
+            >
+
+
+            <label>📏 Available Sizes (Optional)</label>
+
+            <input
+                name="sizes"
+                placeholder="e.g. 22, 24, 26, 28"
+            >
+
+
+            <label>💰 Price (₹)</label>
+
+            <input
+                name="price"
+                type="number"
+                step="0.01"
+                min="1"
+                placeholder="e.g. 320"
+                required
+            >
+
+
+            <label>📸 Product Photo (Optional)</label>
+
+            <input
+                name="image"
+                type="file"
+                accept="image/*"
+            >
+
+            <div class="hint">
+                💡 You can also take a photo directly using your phone. Maximum 5 MB.
+            </div>
+
+
+            <button class="main" type="submit">
+                ➕ Add Product
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- CURRENT LIST -->
+
+    <section class="card">
+
+        <div class="card-heading">
+            <div class="card-icon">📋</div>
+            <div>
+                <h2>Current School & Product List</h2>
+                <p>View and manage all added uniforms.</p>
+            </div>
+        </div>
+
+
+        {% for s in schools %}
+
+            <div class="school-section">
+
+                <div class="school-title">
+
+                    <div class="school-symbol">🏫</div>
+
+                    <div>
+                        <h3>{{ s.name }}</h3>
+                        <small>📍 {{ s.area|default:"Area not specified" }}</small>
+                    </div>
+
+                </div>
+
+
+                {% for p in s.products.all %}
+
+                    <div class="item">
+
+                        {% if p.image %}
+                            <img src="{{ p.image.url }}" alt="{{ p.name }}">
+                        {% else %}
+                            <div class="noimg">👕</div>
+                        {% endif %}
+
+
+                        <div class="info">
+
+                            <b>{{ p.name }}</b>
+
+                            {% if p.class_group %}
+                                <br>📚 {{ p.class_group }}
+                            {% endif %}
+
+                            <br>
+
+                            <span class="price">₹{{ p.price }}</span>
+
+                            {% if p.sizes %}
+                                | 📏 {{ p.sizes }}
+                            {% endif %}
+
+                        </div>
+
+
+                        <form method="post"
+                              onsubmit="return confirm('Are you sure you want to delete this product?')">
+
+                            {% csrf_token %}
+
+                            <input type="hidden"
+                                   name="action"
+                                   value="delete_product">
+
+                            <input type="hidden"
+                                   name="product_id"
+                                   value="{{ p.id }}">
+
+                            <button class="del" type="submit">
+                                🗑️ Delete
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty">
+                        <span>📦</span>
+                        No uniforms added for this school yet.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty">
+                <span>🏫</span>
+                No schools added yet. Add your first school above!
+            </div>
+
+        {% endfor %}
+
+
+        <!-- COMMON PRODUCTS -->
+
+        {% if common %}
+
+            <div class="common-heading">
+                <span>🌍</span>
+                Products Available For All Schools
+            </div>
+
+
+            {% for p in common %}
+
+                <div class="item">
+
+                    {% if p.image %}
+                        <img src="{{ p.image.url }}" alt="{{ p.name }}">
+                    {% else %}
+                        <div class="noimg">🎒</div>
+                    {% endif %}
+
+
+                    <div class="info">
+
+                        <b>{{ p.name }}</b>
+
+                        <br>
+
+                        <span class="price">₹{{ p.price }}</span>
+
+                        {% if p.sizes %}
+                            | 📏 {{ p.sizes }}
+                        {% endif %}
+
+                    </div>
+
+
+                    <form method="post"
+                          onsubmit="return confirm('Are you sure you want to delete this product?')">
+
+                        {% csrf_token %}
+
+                        <input type="hidden"
+                               name="action"
+                               value="delete_product">
+
+                        <input type="hidden"
+                               name="product_id"
+                               value="{{ p.id }}">
+
+                        <button class="del" type="submit">
+                            🗑️ Delete
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    </section>
+
+
+    <div class="footer">
+        Made with ❤️ for <strong>Shree Krishan Uniform</strong>
+    </div>
+
+</main>
+
 </body>
 </html>
+```

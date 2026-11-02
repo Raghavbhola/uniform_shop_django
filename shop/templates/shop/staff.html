@@ -3,253 +3,346 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08275f">
   <title>Add Purchase | Shree Krishan Uniform</title>
   <style>
-    .chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
-    .chip { padding:9px 13px; border:1.5px solid #cbd5e1; border-radius:20px; background:#fff; font-size:14px; cursor:pointer; color:#334155; }
-    .chip.on { background:#2563eb; border-color:#2563eb; color:#fff; font-weight:600; }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
+    :root{
+      --navy:#08275f;--blue:#1557b7;--blue2:#2675df;--sky:#edf5ff;
+      --green:#19b95d;--gold:#ffc928;--ink:#14264b;--muted:#687891;
+      --line:#e3ebf6;--shadow:0 15px 40px rgba(8,39,95,.09);
     }
-    .topbar {
-      background: linear-gradient(135deg, #1e3a8a, #2563eb);
-      color: #fff;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;background:#f4f8ff;color:var(--ink);line-height:1.5}
+    button,input{font:inherit}
+    .topbar{background:linear-gradient(115deg,#061d49,#1458b8);color:#fff;box-shadow:0 5px 22px #08275f20}
+    .nav{max-width:1050px;margin:auto;min-height:76px;padding:12px 20px;display:flex;align-items:center;gap:15px}
+    .back,.schools{color:#fff;text-decoration:none;background:#ffffff1c;border:1px solid #ffffff2b;padding:9px 14px;border-radius:999px;font-size:.88rem;font-weight:750;white-space:nowrap;transition:.2s}
+    .back:hover,.schools:hover{background:#ffffff30;transform:translateY(-2px)}
+    .brand{display:flex;align-items:center;gap:10px;font-size:1.05rem;font-weight:900;line-height:1.1}
+    .brand-icon{width:43px;height:43px;border-radius:14px;background:#fff;color:var(--blue);display:grid;place-items:center;font-size:1.5rem}
+    .brand small{display:block;color:#cfe2ff;font-size:.72rem;font-weight:600;margin-top:4px}
+    .schools{margin-left:auto}
+    .wrap{width:min(100% - 30px,680px);margin:30px auto 55px}
+    .page-title{text-align:center;margin:0 0 23px}
+    .page-title .pill{display:inline-block;background:#e2eeff;color:var(--blue);font-weight:850;font-size:.76rem;letter-spacing:1px;text-transform:uppercase;padding:7px 13px;border-radius:999px}
+    .page-title h1{font-size:clamp(1.8rem,4vw,2.45rem);color:var(--navy);margin:10px 0 4px;letter-spacing:-.7px}
+    .page-title p{color:var(--muted);margin:0}
+    .card{background:#fff;border:1px solid var(--line);border-radius:23px;padding:25px;margin-bottom:18px;box-shadow:var(--shadow)}
+    .card-head{display:flex;align-items:center;gap:12px;margin-bottom:21px}
+    .head-icon{width:44px;height:44px;flex:0 0 44px;display:grid;place-items:center;border-radius:14px;background:#eaf2ff;font-size:1.35rem}
+    .card h2{font-size:1.16rem;color:var(--navy);margin:0}
+    .card-head p{margin:3px 0 0;color:var(--muted);font-size:.85rem}
+    label{display:block;font-size:.88rem;font-weight:800;color:#344765;margin:0 0 8px}
+    .field{margin-bottom:18px}
+    .input-wrap{position:relative}
+    input[type=tel],input[type=number]{width:100%;padding:14px 15px;border:1.5px solid #d5e0ef;border-radius:13px;background:#fbfdff;color:var(--ink);font-size:1rem;outline:none;transition:.2s}
+    input:focus{border-color:var(--blue2);box-shadow:0 0 0 4px #2675df18;background:#fff}
+    input::placeholder{color:#9aa8bc}
+    .field-note{font-size:.76rem;color:#8a98ad;margin:6px 2px 0}
+    .chips{display:flex;flex-wrap:wrap;gap:9px}
+    .chip{padding:10px 13px;border:1.5px solid #d9e3f0;border-radius:999px;background:#fff;font-size:.88rem;cursor:pointer;color:#43536d;font-weight:700;transition:transform .18s,border-color .18s,background .18s}
+    .chip:hover{transform:translateY(-2px);border-color:#8db5ed}
+    .chip.on{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 5px 13px #08275f25}
+    .selected-line{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:12px;color:var(--muted);font-size:.8rem}
+    .selected-line strong{color:var(--blue)}
+    .preview{display:none;margin:16px 0 18px;padding:14px 16px;border-radius:15px;background:linear-gradient(100deg,#eaf3ff,#fff8e3);border:1px solid #dce9fa;color:#214a84}
+    .preview strong{display:block;color:var(--navy);font-size:1.16rem;margin-top:2px}
+    .preview small{color:#637590}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:22px}
+    .btn{border:0;border-radius:13px;padding:15px 14px;font-weight:900;font-size:.97rem;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 9px 20px #08275f20}
+    .btn:disabled{opacity:.65;cursor:wait;transform:none}
+    .btn-primary{background:linear-gradient(110deg,#1557b7,#2675df);color:#fff}
+    .btn-secondary{background:#edf3fb;color:var(--navy);border:1px solid #dce6f3}
+    .tip{margin-top:15px;padding:11px 13px;background:#f7faff;border-radius:12px;color:#75849b;font-size:.78rem}
+    .result{display:none;overflow:hidden}
+    .result.ok{border-color:#bde8cb}
+    .result.err{border-color:#f2c7c7}
+    .result-title{display:flex;align-items:center;gap:9px;font-size:1.12rem;font-weight:900;color:#168044;margin-bottom:8px}
+    .result.err .result-title{color:#bd3030}
+    .result-message{color:#53647d;font-size:.92rem;overflow-wrap:anywhere}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+    .stat{background:#f2f7ff;border-radius:15px;padding:15px;text-align:center}
+    .stat b{display:block;font-size:1.8rem;line-height:1.2;color:var(--navy)}
+    .stat span{font-size:.78rem;color:var(--muted);font-weight:700}
+    .wa{display:flex;justify-content:center;align-items:center;gap:8px;text-align:center;background:var(--green);color:#fff;text-decoration:none;padding:14px;border-radius:13px;font-weight:900;transition:.2s}
+    .wa:hover{background:#119d4c;transform:translateY(-2px)}
+    .sent-note{margin-top:10px;text-align:center;color:#168044;font-size:.8rem;font-weight:750}
+    .rules-card{padding:22px 25px}
+    .rules-card .card-head{margin-bottom:12px}
+    table{width:100%;border-collapse:collapse;font-size:.9rem}
+    td,th{padding:12px 8px;border-bottom:1px solid #edf1f7;text-align:left}
+    th{color:#718098;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px}
+    td:last-child,th:last-child{text-align:right}
+    tr:last-child td{border-bottom:0}
+    .points-badge{display:inline-block;background:#fff2c9;color:#8a5b00;font-weight:900;padding:4px 11px;border-radius:99px}
+    .footer{text-align:center;color:#8996aa;font-size:.78rem;padding:10px 0 25px}
+    .footer strong{color:var(--navy)}
+    @media(max-width:540px){
+      .nav{min-height:68px;padding:10px 13px;gap:9px}
+      .brand{font-size:.88rem;gap:7px}
+      .brand-icon{width:37px;height:37px;font-size:1.25rem}
+      .back,.schools{font-size:.77rem;padding:8px 10px}
+      .wrap{margin-top:23px}
+      .card{padding:20px 17px;border-radius:19px}
+      .actions{grid-template-columns:1fr}
+      .chip{font-size:.82rem;padding:9px 11px}
     }
-    .topbar a {
-      color: #fff;
-      text-decoration: none;
-      background: rgba(255,255,255,.18);
-      padding: 7px 14px;
-      border-radius: 20px;
-      font-size: 14px;
-    }
-    .topbar h1 { margin: 0; font-size: 18px; }
-    .wrap { max-width: 460px; margin: 18px auto; padding: 0 14px 30px; }
-    .card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 14px;
-      box-shadow: 0 2px 10px rgba(15,23,42,.08);
-    }
-    .card h2 { margin: 0 0 12px; font-size: 17px; }
-    label { font-size: 13px; color: #64748b; display: block; margin-bottom: 5px; }
-    input {
-      width: 100%;
-      padding: 13px;
-      font-size: 16px;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 10px;
-      margin-bottom: 14px;
-      outline: none;
-    }
-    input:focus { border-color: #2563eb; }
-    .preview {
-      background: #eff6ff;
-      color: #1d4ed8;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 14px;
-      margin-bottom: 14px;
-      display: none;
-    }
-    button.add {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #fff;
-      background: #2563eb;
-      border: 0;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    button.add:hover { background: #1d4ed8; }
-    .result { display: none; }
-    .result.ok { border-left: 5px solid #16a34a; }
-    .result.err { border-left: 5px solid #dc2626; }
-    .stats { display: flex; gap: 10px; margin: 12px 0; }
-    .stat {
-      flex: 1;
-      background: #f8fafc;
-      border-radius: 10px;
-      padding: 10px;
-      text-align: center;
-    }
-    .stat b { display: block; font-size: 20px; color: #1e3a8a; }
-    .stat span { font-size: 12px; color: #64748b; }
-    .wa {
-      display: block;
-      text-align: center;
-      background: #22c55e;
-      color: #fff;
-      text-decoration: none;
-      padding: 13px;
-      border-radius: 10px;
-      font-weight: 600;
-    }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    td, th { padding: 8px 6px; border-bottom: 1px solid #e2e8f0; text-align: left; }
-    th { color: #64748b; font-weight: 600; }
-    .hint { font-size: 12px; color: #94a3b8; margin-top: 8px; }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <a href="/">&larr; Back</a>
-    <h1>Shree Krishan Uniform</h1>
-    <a href="/manage/" style="margin-left:auto">⚙️ Schools</a>    
-  </div>
+  <header class="topbar">
+    <div class="nav">
+      <a class="back" href="/">← Home</a>
+      <div class="brand"><span class="brand-icon">👕</span><span>Shree Krishan Uniform<small>Staff Purchase Panel</small></span></div>
+      <a class="schools" href="/manage/">⚙️ Schools</a>
+    </div>
+  </header>
 
-  <div class="wrap">
-    <div class="card">
-      <h2>Add Purchase</h2>
-
-      <label for="phone">Customer ka phone number</label>
-      <input id="phone" list="phones" autocomplete="off" inputmode="numeric"
-             maxlength="10" placeholder="Phone no.">
-      <datalist id="phones"></datalist>
-
-      <label for="amount">Amount (&#8377;)</label>
-      <input id="amount" type="number" inputmode="decimal" placeholder="amount">
-      
-      <label>Kya kharida? (jo liya wo sab dabao)</label>
-      <div class="chips" id="chips">
-        <button type="button" class="chip" data-item="Shirt">👕 Shirt</button>
-        <button type="button" class="chip" data-item="Dress">👗 Dress</button>
-        <button type="button" class="chip" data-item="Trouser">👖 Trouser</button>
-        <button type="button" class="chip" data-item="Tie">👔 Tie</button>
-        <button type="button" class="chip" data-item="Belt">🪢 Belt</button>
-        <button type="button" class="chip" data-item="Shoes">👟 Shoes</button>
-        <button type="button" class="chip" data-item="Socks">🧦 Socks</button>
-        <button type="button" class="chip" data-item="School Bag">🎒 School Bag</button>
-        <button type="button" class="chip" data-item="Tiffin">🍱 Tiffin</button>
-        <button type="button" class="chip" data-item="Bottle">🍶 Bottle</button>
-        <button type="button" class="chip" data-item="Other">➕ Other</button>
-      </div>      
-
-      <div class="preview" id="preview"></div>
-
-      <button class="add" onclick="addPurchase()">Add Purchase</button>
-      <button class="add" style="background:#475569;margin-top:10px" onclick="openHistory()">&#128196; Customer ki History</button>
-      <div class="hint">Tip: number likhke Enter dabao, phir amount likhke Enter dabao.</div>
+  <main class="wrap">
+    <div class="page-title">
+      <span class="pill">Staff dashboard</span>
+      <h1>🛍️ Add New Purchase</h1>
+      <p>Record a purchase and reward your customer with points.</p>
     </div>
 
-    <div class="card result" id="result"></div>
+    <section class="card">
+      <div class="card-head">
+        <span class="head-icon">🧾</span>
+        <div><h2>Purchase Details</h2><p>Enter customer details and select purchased items.</p></div>
+      </div>
 
-    <div class="card">
-      <h2>Points ka rule</h2>
+      <div class="field">
+        <label for="phone">📱 Customer WhatsApp Number</label>
+        <input id="phone" list="phones" autocomplete="off" inputmode="numeric" maxlength="10"
+               placeholder="Enter 10-digit mobile number">
+        <datalist id="phones"></datalist>
+        <div class="field-note">Existing customer suggestions will appear as you type.</div>
+      </div>
+
+      <div class="field">
+        <label for="amount">💰 Total Purchase Amount (₹)</label>
+        <input id="amount" type="number" inputmode="decimal" min="1" step="0.01" placeholder="Enter total amount">
+      </div>
+
+      <div class="field">
+        <label>🛒 Items Purchased <span style="font-weight:500;color:#8a98ad">(Select all that apply)</span></label>
+        <div class="chips" id="chips">
+          <button type="button" class="chip" data-item="Shirt">👕 Shirt</button>
+          <button type="button" class="chip" data-item="Dress">👗 Dress</button>
+          <button type="button" class="chip" data-item="Trouser">👖 Trouser</button>
+          <button type="button" class="chip" data-item="Tie">👔 Tie</button>
+          <button type="button" class="chip" data-item="Belt">🪢 Belt</button>
+          <button type="button" class="chip" data-item="Shoes">👟 Shoes</button>
+          <button type="button" class="chip" data-item="Socks">🧦 Socks</button>
+          <button type="button" class="chip" data-item="School Bag">🎒 School Bag</button>
+          <button type="button" class="chip" data-item="Tiffin">🍱 Tiffin</button>
+          <button type="button" class="chip" data-item="Bottle">🍶 Bottle</button>
+          <button type="button" class="chip" data-item="Other">➕ Other</button>
+        </div>
+        <div class="selected-line"><span id="selectedText">No items selected</span><strong id="selectedCount">0 selected</strong></div>
+      </div>
+
+      <div class="preview" id="preview">
+        ⭐ Estimated points for this purchase
+        <strong id="previewPoints">0 points</strong>
+        <small>Points are calculated according to the purchase amount.</small>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="addBtn" type="button" onclick="addPurchase()">➕ Add Purchase</button>
+        <button class="btn btn-secondary" type="button" onclick="openHistory()">📄 Customer History</button>
+      </div>
+      <div class="tip">💡 Quick tip: Enter the phone number, press Enter, add the amount, then press Enter again.</div>
+    </section>
+
+    <section class="card result" id="result" aria-live="polite"></section>
+
+    <section class="card rules-card">
+      <div class="card-head">
+        <span class="head-icon">⭐</span>
+        <div><h2>Loyalty Points Rules</h2><p>Points earned based on the total purchase amount.</p></div>
+      </div>
       <table>
-        <tr><th>Purchase</th><th>Points</th></tr>
-        <tr><td>&#8377;100 tak</td><td>20</td></tr>
-        <tr><td>&#8377;101 &ndash; &#8377;200</td><td>45</td></tr>
-        <tr><td>&#8377;201 &ndash; &#8377;500</td><td>100</td></tr>
-        <tr><td>&#8377;500 se upar</td><td>150</td></tr>
+        <thead><tr><th>Purchase Amount</th><th>Points Earned</th></tr></thead>
+        <tbody>
+          <tr><td>Up to ₹100</td><td><span class="points-badge">20 points</span></td></tr>
+          <tr><td>₹101 – ₹200</td><td><span class="points-badge">45 points</span></td></tr>
+          <tr><td>₹201 – ₹500</td><td><span class="points-badge">100 points</span></td></tr>
+          <tr><td>Above ₹500</td><td><span class="points-badge">150 points</span></td></tr>
+        </tbody>
       </table>
-    </div>
+    </section>
 
     {% csrf_token %}
-  </div>
+    <div class="footer">Made for <strong>Shree Krishan Uniform</strong> · Staff access only</div>
+  </main>
 
   <script>
     const phoneEl = document.getElementById('phone');
     const amountEl = document.getElementById('amount');
     const listEl = document.getElementById('phones');
     const previewEl = document.getElementById('preview');
+    const previewPointsEl = document.getElementById('previewPoints');
     const resultEl = document.getElementById('result');
+    const addBtn = document.getElementById('addBtn');
+    let searchTimer;
 
-    // views.py ke get_points jaisa hi rule (agar wahan badlo to yahan bhi badlo)
-    function pointsFor(a) {
-      if (a <= 100) return 20;
-      if (a <= 200) return 45;
-      if (a <= 500) return 100;
+    // Keep this rule in sync with get_points() in views.py.
+    function pointsFor(amount) {
+      if (amount <= 100) return 20;
+      if (amount <= 200) return 45;
+      if (amount <= 500) return 100;
       return 150;
     }
 
-    // URL se phone pehle se bhara aaye
-    const p = new URLSearchParams(location.search).get('phone');
-    if (p) phoneEl.value = p;
+    // Pre-fill phone number when redirected from the homepage.
+    const initialPhone = new URLSearchParams(location.search).get('phone');
+    if (initialPhone) phoneEl.value = initialPhone;
 
-    // Number suggestions
-    phoneEl.addEventListener('input', async () => {
+    // Customer number suggestions (debounced to avoid repeated requests).
+    phoneEl.addEventListener('input', () => {
+      clearTimeout(searchTimer);
       const q = phoneEl.value.trim();
       if (q.length < 2) { listEl.innerHTML = ''; return; }
-      const r = await fetch('/search/?q=' + encodeURIComponent(q));
-      const d = await r.json();
-      listEl.innerHTML = d.results
-        .map(c => '<option value="' + c.phone + '">' + c.points + ' points</option>')
-        .join('');
+      searchTimer = setTimeout(async () => {
+        try {
+          const response = await fetch('/search/?q=' + encodeURIComponent(q));
+          if (!response.ok) return;
+          const data = await response.json();
+          listEl.innerHTML = (data.results || []).map(c =>
+            '<option value="' + escapeHtml(c.phone) + '">' +
+            escapeHtml(c.points) + ' points</option>'
+          ).join('');
+        } catch (error) {
+          console.error('Customer search failed:', error);
+        }
+      }, 250);
     });
 
-    // Amount likhte hi points ka preview
-    amountEl.addEventListener('input', () => {
-      const a = parseFloat(amountEl.value);
-      if (a > 0) {
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[char]));
+    }
+
+    // Live points preview.
+    amountEl.addEventListener('input', updatePreview);
+    function updatePreview() {
+      const amount = Number(amountEl.value);
+      if (Number.isFinite(amount) && amount > 0) {
+        previewPointsEl.textContent = pointsFor(amount) + ' points';
         previewEl.style.display = 'block';
-        previewEl.textContent = '\u2B50 Is purchase par ' + pointsFor(a) + ' points milenge';
       } else {
         previewEl.style.display = 'none';
       }
+    }
+
+    // Enter key shortcuts.
+    phoneEl.addEventListener('keydown', event => {
+      if (event.key === 'Enter') { event.preventDefault(); amountEl.focus(); }
+    });
+    amountEl.addEventListener('keydown', event => {
+      if (event.key === 'Enter') { event.preventDefault(); addPurchase(); }
     });
 
-    // Enter keys
-    phoneEl.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { e.preventDefault(); amountEl.focus(); }
+    // Select multiple purchased items.
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.classList.toggle('on');
+        updateSelectedItems();
+      });
     });
-    amountEl.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { e.preventDefault(); addPurchase(); }
-    });
+    function selectedItems() {
+      return [...document.querySelectorAll('.chip.on')].map(chip => chip.dataset.item).join(',');
+    }
+    function updateSelectedItems() {
+      const selected = [...document.querySelectorAll('.chip.on')].map(chip => chip.textContent.trim());
+      document.getElementById('selectedText').textContent = selected.length ? selected.join(' · ') : 'No items selected';
+      document.getElementById('selectedCount').textContent = selected.length + (selected.length === 1 ? ' selected' : ' selected');
+    }
 
     function openHistory() {
-      const ph = phoneEl.value.trim();
-      if (ph.length !== 10) { alert('Pehle 10 digit ka number likho'); return; }
-      window.location.href = '/history/' + ph + '/';
+      const phone = phoneEl.value.trim();
+      if (!/^\d{10}$/.test(phone)) {
+        alert('Please enter a valid 10-digit mobile number first.');
+        phoneEl.focus();
+        return;
+      }
+      window.location.href = '/history/' + encodeURIComponent(phone) + '/';
     }
 
-    document.querySelectorAll('.chip').forEach(c =>
-      c.addEventListener('click', () => c.classList.toggle('on')));
-
-    function selectedItems() {
-      return [...document.querySelectorAll('.chip.on')].map(c => c.dataset.item).join(',');
-    }
-    
-    async function addPurchase() {
-      {% comment %} const body = new URLSearchParams({ phone: phoneEl.value, amount: amountEl.value }); {% endcomment %}
-      const body = new URLSearchParams({ phone: phoneEl.value, amount: amountEl.value, items: selectedItems() });      
-      const r = await fetch('/purchase/', {
-        method: 'POST',
-        headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
-        body
-      });
-      const d = await r.json();
+    function showError(message) {
       resultEl.style.display = 'block';
+      resultEl.className = 'card result err';
+      resultEl.innerHTML = '<div class="result-title">❌ Purchase could not be added</div>' +
+        '<div class="result-message">' + escapeHtml(message || 'Something went wrong. Please try again.') + '</div>';
+      resultEl.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
 
-      if (d.success) {
+    async function addPurchase() {
+      const phone = phoneEl.value.trim();
+      const amount = Number(amountEl.value);
+      if (!/^\d{10}$/.test(phone)) {
+        showError('Please enter a valid 10-digit customer phone number.');
+        phoneEl.focus();
+        return;
+      }
+      if (!Number.isFinite(amount) || amount <= 0) {
+        showError('Please enter a purchase amount greater than ₹0.');
+        amountEl.focus();
+        return;
+      }
+
+      const csrf = document.querySelector('[name=csrfmiddlewaretoken]');
+      const body = new URLSearchParams({
+        phone: phone,
+        amount: amountEl.value,
+        items: selectedItems()
+      });
+
+      addBtn.disabled = true;
+      addBtn.textContent = '⏳ Saving Purchase...';
+      try {
+        const response = await fetch('/purchase/', {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrf ? csrf.value : '',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: body
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+          showError(data.message || 'Unable to save this purchase.');
+          return;
+        }
+
+        resultEl.style.display = 'block';
         resultEl.className = 'card result ok';
         resultEl.innerHTML =
-          '<h2>\u2705 Purchase add ho gayi</h2>' +
-          '<div>' + d.message + '</div>' +
+          '<div class="result-title">✅ Purchase Added Successfully!</div>' +
+          '<div class="result-message">' + escapeHtml(data.message || 'The purchase has been recorded.') + '</div>' +
           '<div class="stats">' +
-            '<div class="stat"><b>' + d.points_earned + '</b><span>Aaj ke points</span></div>' +
-            '<div class="stat"><b>' + d.total_points + '</b><span>Total points</span></div>' +
+            '<div class="stat"><b>' + escapeHtml(data.points_earned) + '</b><span>Points earned today</span></div>' +
+            '<div class="stat"><b>' + escapeHtml(data.total_points) + '</b><span>Customer total points</span></div>' +
           '</div>' +
-          (d.whatsapp_sent ? '<div class="hint">✅ API se bhej diya gaya</div>' : '') +
-          '<a class="wa" href="' + d.whatsapp_link + '" target="_blank">📲 WhatsApp par message bhejo</a>'
+          (data.whatsapp_sent ? '<div class="sent-note">✅ WhatsApp message sent automatically.</div>' : '') +
+          (data.whatsapp_link ? '<a class="wa" href="' + escapeHtml(data.whatsapp_link) + '" target="_blank" rel="noopener noreferrer">📲 Send WhatsApp Message</a>' : '');
+
         amountEl.value = '';
-        document.querySelectorAll('.chip.on').forEach(c => c.classList.remove('on'));        
+        document.querySelectorAll('.chip.on').forEach(chip => chip.classList.remove('on'));
+        updateSelectedItems();
         previewEl.style.display = 'none';
+        resultEl.scrollIntoView({behavior:'smooth', block:'nearest'});
         phoneEl.focus();
-      } else {
-        resultEl.className = 'card result err';
-        resultEl.innerHTML = '<h2>\u274C Kuch galat hua</h2><div>' + d.message + '</div>';
+      } catch (error) {
+        console.error('Add purchase failed:', error);
+        showError('Network or server error. Please try again.');
+      } finally {
+        addBtn.disabled = false;
+        addBtn.textContent = '➕ Add Purchase';
       }
     }
   </script>

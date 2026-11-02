@@ -237,485 +237,998 @@ function getCookie(name) {
 
 
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <meta name="theme-color" content="#08275f">
-  <title>Shree Krishan Uniform | Shop, Earn & Save</title>
+
+  <title>Shree Krishan Uniform | Shop, Earn &amp; Save</title>
+
   <style>
+
     :root{
+
       --navy:#08275f;--blue:#1455b8;--sky:#eaf3ff;--yellow:#ffc928;
+
       --green:#20c768;--ink:#10234b;--muted:#65748d;--white:#fff;
+
       --shadow:0 16px 42px rgba(9,39,95,.10);--radius:24px;
+
     }
+
     *{box-sizing:border-box;margin:0;padding:0}
+
     html{scroll-behavior:smooth}
+
     body{font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);background:#f7faff;line-height:1.55}
+
     a{color:inherit}
+
     .container{width:min(1160px,calc(100% - 40px));margin:auto}
+
     .topbar{background:var(--navy);color:#fff}
+
     .nav{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+
     .brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:900;font-size:1.3rem;line-height:1.05}
+
     .brand-icon{width:48px;height:48px;border-radius:15px;background:#fff;color:var(--blue);display:grid;place-items:center;font-size:1.8rem}
+
     .brand span em{display:block;color:var(--yellow);font-style:normal}
+
     .navlinks{display:flex;align-items:center;gap:28px}
+
     .navlinks a{text-decoration:none;font-weight:700;color:#e8f1ff}
+
     .navlinks a:hover{color:var(--yellow)}
+
     .hero{position:relative;overflow:hidden;color:#fff;background:radial-gradient(circle at 78% 42%,#277bdc 0,transparent 31%),linear-gradient(125deg,#061e4d,#0b3c91 58%,#1975cf);padding:76px 0 88px}
+
     .hero:before,.hero:after{content:"";position:absolute;border:1px solid rgba(255,255,255,.13);border-radius:50%;pointer-events:none}
+
     .hero:before{width:520px;height:520px;right:-120px;top:-210px}
+
     .hero:after{width:360px;height:360px;right:35px;bottom:-250px}
+
     .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:38px}
+
     .eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);padding:8px 14px;border-radius:99px;font-size:.85rem;font-weight:700;margin-bottom:20px}
+
     .hero h1{font-size:clamp(2.5rem,5vw,4.6rem);line-height:1.06;letter-spacing:-1.8px;max-width:650px}
+
     .hero h1 strong{color:var(--yellow)}
+
     .hero-copy{font-size:1.08rem;color:#dceaff;max-width:550px;margin:20px 0 28px}
+
     .actions{display:flex;flex-wrap:wrap;gap:13px}
+
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 23px;border-radius:999px;text-decoration:none;font-weight:850;border:0;cursor:pointer;transition:transform .2s,box-shadow .2s}
+
     .btn:hover{transform:translateY(-3px);box-shadow:0 12px 25px rgba(0,0,0,.16)}
+
     .btn-wa{background:var(--green);color:#fff}
+
     .btn-gold{background:var(--yellow);color:#17264b}
+
     .trust{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+
     .trust span{font-size:.83rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);padding:8px 12px;border-radius:99px}
+
     .visual{position:relative;min-height:380px;display:grid;place-items:center}
+
     .visual-glow{position:absolute;width:330px;height:330px;border-radius:50%;background:linear-gradient(145deg,#83c8ff,#236ed1);filter:blur(1px);opacity:.8}
-    .uniform-card{position:relative;width:min(100%,430px);min-height:330px;border:1px solid rgba(255,255,255,.3);border-radius:32px;background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(255,255,255,.06));backdrop-filter:blur(12px);box-shadow:0 25px 65px rgba(0,0,0,.22);display:grid;place-items:center}
+
+    .uniform-card{position:relative;width:min(100%,430px);min-height:330px;padding:28px 20px 18px;border:1px solid rgba(255,255,255,.3);border-radius:32px;background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(255,255,255,.06));backdrop-filter:blur(12px);box-shadow:0 25px 65px rgba(0,0,0,.22);display:grid;grid-template-rows:1fr auto;justify-items:center;align-items:center;gap:12px}
+
     .uniform-art{font-size:clamp(6rem,14vw,10rem);filter:drop-shadow(0 18px 12px rgba(0,0,0,.2));animation:float 4s ease-in-out infinite}
+
     .float-tag{position:absolute;background:#fff;color:var(--navy);font-weight:850;padding:12px 16px;border-radius:16px;box-shadow:var(--shadow)}
+
     .tag-one{top:25px;left:-18px;transform:rotate(-5deg)}
+
     .tag-two{right:-15px;bottom:25px;transform:rotate(4deg);background:var(--yellow)}
+
     @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-13px)}}
+
     section{padding:76px 0}
+
     .section-head{text-align:center;margin-bottom:34px}
+
     .kicker{color:var(--blue);font-size:.78rem;font-weight:900;letter-spacing:1.8px;text-transform:uppercase}
+
     .section-head h2{font-size:clamp(1.9rem,3.5vw,2.7rem);line-height:1.15;margin:8px 0;color:var(--navy)}
+
     .section-head p{color:var(--muted)}
+
     .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+
     .step{position:relative;overflow:hidden;padding:28px 24px;border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);border:1px solid #e9f0fa;text-align:center;transition:transform .25s}
+
     .step:hover{transform:translateY(-7px)}
+
     .step:nth-child(1){background:linear-gradient(145deg,#e7f1ff,#fff)}
+
     .step:nth-child(2){background:linear-gradient(145deg,#fff3dc,#fff)}
+
     .step:nth-child(3){background:linear-gradient(145deg,#e4f9eb,#fff)}
+
     .step-number{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-weight:900;margin:0 auto 15px}
+
     .step-icon{font-size:2.6rem;margin-bottom:10px}
+
     .step h3{font-size:1.13rem;margin-bottom:7px;color:var(--navy)}
+
     .step p{font-size:.94rem;color:var(--muted)}
+
     .school-section{background:#fff}
+
     .school-box{max-width:650px;margin:0 auto 24px}
+
     .school-box label{display:block;font-weight:800;margin-bottom:8px}
+
     .school-input{width:100%;padding:16px 18px;border:1.5px solid #d6e2f2;border-radius:15px;font-size:1rem;outline:none;background:#fbfdff}
+
     .school-input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(20,85,184,.1)}
+
     .tabs{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:18px 0}
+
     .tab{padding:9px 16px;border:1px solid #cbdcf3;background:#fff;color:var(--blue);border-radius:99px;font-weight:750;cursor:pointer}
+
     .tab.on,.tab:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
     .hint{max-width:760px;margin:12px auto;padding:17px;text-align:center;border-radius:15px;background:var(--sky);color:#4c6384}
+
     .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px}
+
     .product{background:#fff;border:1px solid #e8eef7;border-radius:19px;padding:14px;text-align:center;box-shadow:0 8px 22px rgba(16,35,75,.06);transition:transform .22s,box-shadow .22s}
+
     .product:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+
     .product img{width:100%;height:145px;object-fit:cover;border-radius:13px;margin-bottom:8px}
+
     .product .product-icon{height:145px;display:grid;place-items:center;background:#f0f6ff;border-radius:13px;font-size:3.6rem}
+
     .product h3{font-size:1rem;margin:8px 0 2px}
+
     .product .pinfo{font-size:.8rem;color:var(--muted)}
+
     .product .price{font-size:1.12rem;font-weight:900;color:#e18a00;margin-top:7px}
+
     .subhead{text-align:center;color:var(--navy);margin:28px 0 14px}
+
     .points-band{background:linear-gradient(120deg,#08275f,#1058b7);color:#fff;border-radius:30px;padding:32px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:25px;box-shadow:0 20px 45px rgba(8,39,95,.18)}
+
     .points-band h3{font-size:1.6rem;margin-bottom:4px}
+
     .points-band p{color:#dceaff}
+
     .progress{height:16px;background:rgba(255,255,255,.25);border-radius:99px;overflow:hidden;margin:20px 0 9px;max-width:650px}
+
     .progress span{display:block;height:100%;width:75%;background:linear-gradient(90deg,#ffd13d,#ff9f1c);border-radius:99px}
+
     .discount-ticket{background:var(--yellow);color:#15264c;padding:20px 27px;border-radius:20px;text-align:center;transform:rotate(3deg);box-shadow:0 12px 25px rgba(0,0,0,.15)}
+
     .discount-ticket strong{display:block;font-size:2.5rem;line-height:1}
+
     .discount-ticket small{font-weight:900}
+
     .points-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+
     .info-card{background:#fff;border:1px solid #e7eef8;border-radius:22px;padding:25px;box-shadow:var(--shadow)}
+
     .info-card h3{font-size:1.15rem;color:var(--navy);margin-bottom:12px}
+
     .point-row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #edf1f7}
+
     .point-row:last-child{border-bottom:0}
+
     .badge{background:#fff0c2;color:#8a5700;padding:4px 12px;border-radius:99px;font-weight:900;font-size:.85rem;white-space:nowrap}
+
     .reward{background:#edf5ff;padding:13px 15px;border-radius:13px;margin-top:9px}
+
     .register-section{background:linear-gradient(180deg,#eaf3ff,#f7faff)}
+
     .reg-card{max-width:550px;margin:auto;background:#fff;padding:32px;border-radius:26px;box-shadow:0 20px 55px rgba(20,85,184,.14);border:1px solid #e2ecf9}
+
     .reg-card h2{text-align:center;color:var(--navy);font-size:1.7rem}
+
     .reg-card .note{text-align:center;color:var(--muted);margin:7px 0 22px}
+
     .input-row{display:flex;gap:9px;margin-bottom:12px}
+
     .prefix{display:grid;place-items:center;padding:0 16px;background:#edf5ff;border:1px solid #d4e4fa;border-radius:13px;color:var(--blue);font-weight:900}
+
     input[type=tel]{width:100%;min-width:0;padding:15px;border:1.5px solid #d5e0ef;border-radius:13px;font-size:1.05rem;outline:none}
+
     input[type=tel]:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(20,85,184,.1)}
+
     .reg-btn{width:100%;padding:16px;border:0;border-radius:13px;background:var(--blue);color:#fff;font-size:1rem;font-weight:900;cursor:pointer;transition:background .2s,transform .2s}
+
     .reg-btn:hover{background:var(--navy);transform:translateY(-2px)}
+
     .reg-btn:disabled{opacity:.65;cursor:wait}
+
     .msg{display:none;margin-top:13px;padding:12px;border-radius:12px;text-align:center;font-size:.92rem}
+
     .msg.success{display:block;background:#e8f8ee;color:#16733a}
+
     .msg.error{display:block;background:#fff0f0;color:#b42318}
+
     .result{display:none;text-align:center;margin-top:20px;padding:20px;background:#f4f8ff;border-radius:16px}
+
     .big{font-size:2.8rem;font-weight:950;color:var(--blue);line-height:1}
+
     .big small{display:block;font-size:.85rem;color:var(--muted);font-weight:600;margin-top:7px}
+
     .bar{height:12px;background:#d8e8ff;border-radius:99px;overflow:hidden;margin:16px 0 8px}
+
     .fill{height:100%;width:0;background:linear-gradient(90deg,#1a65c8,#ffc928);transition:width .8s ease}
+
     .remain{font-size:.9rem;color:var(--muted)}
+
     .staff-link{display:block;margin-top:18px;padding:13px;border:1.5px solid #c9dcf7;border-radius:13px;color:var(--blue);font-weight:850;text-decoration:none;text-align:center}
+
     .benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
     .benefit{background:#fff;border:1px solid #e8eef7;border-radius:20px;padding:23px 17px;text-align:center;box-shadow:0 8px 22px rgba(16,35,75,.05)}
+
     .benefit .ic{font-size:2.1rem}
+
     .benefit h3{font-size:1rem;color:var(--navy);margin:8px 0 4px}
+
     .benefit p{font-size:.86rem;color:var(--muted)}
+
     footer{background:#061d49;color:#d7e6ff;text-align:center;padding:30px 20px}
+
     footer strong{font-size:1.2rem;color:#fff}
+
     footer a{color:#fff;text-decoration:none;font-weight:750}
+
     .by{font-size:.8rem;opacity:.7;margin-top:10px}
+
     .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+
     .reveal.visible{opacity:1;transform:translateY(0)}
+
     @media(max-width:800px){
+
       .hero-grid{grid-template-columns:1fr;text-align:center}
+
       .hero-copy{margin-left:auto;margin-right:auto}
+
       .actions,.trust{justify-content:center}
+
       .visual{min-height:300px}
+
       .uniform-card{min-height:270px;max-width:390px}
+
       .uniform-art{font-size:7rem}
+
       .steps{grid-template-columns:1fr}
+
       .points-band{grid-template-columns:1fr;text-align:center}
+
       .progress{margin-left:auto;margin-right:auto}
+
       .discount-ticket{width:max-content;margin:auto}
+
       .benefits{grid-template-columns:repeat(2,1fr)}
+
       .navlinks{gap:13px;font-size:.88rem}
+
     }
+
     @media(max-width:520px){
+
       .container{width:min(100% - 28px,1160px)}
+
       .nav{min-height:70px}
+
       .brand{font-size:1rem}
+
       .brand-icon{width:40px;height:40px;font-size:1.5rem}
+
       .navlinks a:not(:last-child){display:none}
+
       .hero{padding:55px 0 65px}
+
       .hero h1{font-size:2.55rem}
+
       .hero-copy{font-size:.98rem}
+
       .btn{width:100%}
+
       section{padding:56px 0}
+
       .points-wrap{grid-template-columns:1fr}
+
       .points-band{padding:25px 18px}
+
       .reg-card{padding:23px 18px}
+
       .benefits{grid-template-columns:1fr 1fr;gap:10px}
+
       .benefit{padding:17px 10px}
+
       .float-tag{font-size:.82rem;padding:9px 11px}
+
       .tag-one{left:0}.tag-two{right:0}
+
     }
+
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+.uniform-rotator {
+
+    display: inline-block;
+
+    background: #ffd84d;
+
+    color: #08275f;
+
+    padding: 12px 25px;
+
+    border-radius: 30px;
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    min-width: 170px;
+
+    text-align: center;
+
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+}
+
+.uniform-rotator.change {
+
+    opacity: 0;
+
+    transform: translateY(10px);
+
+}    
+
+.uniform-card {
+
+    transition: opacity 0.3s ease;
+
+}
+
+.uniform-card.changing {
+
+    opacity: 0;
+
+}
+
   </style>
+
 </head>
+
 <body>
+
 <header class="topbar">
+
   <div class="container nav">
+
     <a class="brand" href="#">
+
       <span class="brand-icon">👕</span>
+
       <span>Shree Krishan <em>Uniform</em></span>
+
     </a>
+
     <nav class="navlinks" aria-label="Main navigation">
+
       <a href="#how">How it works</a>
+
       <a href="#points">Points</a>
+
       <a href="#register">My points</a>
+
       <a href="#footer">Support</a>
+
     </nav>
+
   </div>
+
 </header>
 
 <main>
+
   <section class="hero">
+
     <div class="container hero-grid">
+
       <div>
+
         <div class="eyebrow">🏫 Your school essentials, all in one place</div>
+
         <h1>School Uniforms.<br><strong>More Points.</strong><br>More Savings!</h1>
+
         <p class="hero-copy">School uniforms, shoes and bags — sab ek jagah. Shop at our store, earn loyalty points on every purchase and enjoy discounts.</p>
+
         <div class="actions">
+
           <a class="btn btn-wa" id="wa-hero" href="#">📲 Order on WhatsApp <span>→</span></a>
+
           <a class="btn btn-gold" href="#register">🎁 Check / Earn Points</a>
+
         </div>
+
         <div class="trust">
+
           <span>✓ Quality products</span><span>🎁 Loyalty rewards</span><span>📱 WhatsApp updates</span>
+
         </div>
+
       </div>
-      <div class="visual" aria-label="School uniform, shoes and bag illustration">
+
+      <div class="visual" aria-label="School uniform items">
         <div class="visual-glow"></div>
-        <div class="uniform-card">
-          <div class="uniform-art">👔</div>
-          <div class="float-tag tag-one">🎒 School Bags</div>
-          <div class="float-tag tag-two">🧦 Uniform Essentials</div>
+        <div class="uniform-card" id="uniformCard">
+          <div class="uniform-art" id="uniformArt">👕</div>
+          <span class="uniform-rotator" id="uniformRotator">Shirts</span>
         </div>
       </div>
     </div>
+  </div>
   </section>
 
   <section id="how">
+
     <div class="container">
+
       <div class="section-head reveal">
-        <div class="kicker">Simple & rewarding</div>
+
+        <div class="kicker">Simple &amp; rewarding</div>
+
         <h2>How Does It Work?</h2>
+
         <p>Just 3 easy steps — no card or app required!</p>
+
       </div>
+
       <div class="steps">
+
         <article class="step reveal"><div class="step-number">1</div><div class="step-icon">📱</div><h3>Register Your Number</h3><p>Enter your WhatsApp number to get started.</p></article>
+
         <article class="step reveal"><div class="step-number">2</div><div class="step-icon">🛍️</div><h3>Purchase at Our Shop</h3><p>Earn points automatically on every purchase.</p></article>
-        <article class="step reveal"><div class="step-number">3</div><div class="step-icon">🎁</div><h3>Redeem & Get Discount</h3><p>Get ₹85 off when you reach 1,000 points.</p></article>
+
+        <article class="step reveal"><div class="step-number">3</div><div class="step-icon">🎁</div><h3>Redeem &amp; Get Discount</h3><p>Get ₹85 off when you reach 1,000 points.</p></article>
+
       </div>
+
     </div>
+
   </section>
 
   <section class="school-section" id="products">
+
     <div class="container">
+
       <div class="section-head reveal">
+
         <div class="kicker">Find your school</div>
+
         <h2>🛍️ View Your School Uniform</h2>
+
         <p>Select your school, class and size to view available items and prices.</p>
+
       </div>
+
       <div class="school-box reveal">
+
         <label for="schoolInput">School name</label>
+
         <input class="school-input" type="text" id="schoolInput" list="schoolList" placeholder="🔎 Enter or select your school name" autocomplete="off">
+
         <datalist id="schoolList"></datalist>
+
       </div>
+
       <div class="tabs" id="classTabs"></div>
+
       <div id="schoolMsg" class="hint">Select your school above to view its uniform list here.</div>
+
       <div class="products" id="productList"></div>
+
       <h3 class="subhead" id="commonHead" style="display:none">For All Schools</h3>
+
       <div class="products" id="commonList"></div>
+
     </div>
+
   </section>
 
   {{ schools|json_script:"schools-data" }}
+
   {{ common|json_script:"common-data" }}
 
   <section id="points">
+
     <div class="container">
+
       <div class="section-head reveal">
+
         <div class="kicker">Every purchase counts</div>
+
         <h2>🎁 Loyalty Points</h2>
+
         <p>🛍️ The more you shop, the more points you earn!</p>
+
       </div>
+
       <div class="points-band reveal">
+
         <div>
+
           <h3>⭐ Your Points, Your Rewards</h3>
+
           <p>Keep shopping and unlock your next discount.</p>
+
           <div class="progress"><span></span></div>
+
           <p>🎯 Collect 1,000 points to get ₹85 off!</p>
+
         </div>
+
         <div class="discount-ticket"><strong>₹85</strong><small>DISCOUNT AT 1,000 POINTS</small></div>
+
       </div>
+
       <div class="points-wrap">
+
         <div class="info-card reveal">
+
           <h3>🤔 How Many Points Will You Earn?</h3>
+
           <div class="point-row"><span>Purchase up to ₹100</span><span class="badge">20 pts</span></div>
+
           <div class="point-row"><span>₹101 – ₹200</span><span class="badge">45 pts</span></div>
+
           <div class="point-row"><span>₹201 – ₹500</span><span class="badge">100 pts</span></div>
+
           <div class="point-row"><span>Above ₹500</span><span class="badge">150 pts</span></div>
+
         </div>
+
         <div class="info-card reveal">
+
           <h3>🎁 Benefits of Points</h3>
+
           <div class="reward">🏆 <b>1,000 points = ₹85 discount</b> on your next purchase.</div>
+
           <div class="reward">📲 Get a WhatsApp points summary after every purchase.</div>
+
           <div class="reward">📜 Your purchase history stays recorded with the shop.</div>
+
         </div>
+
       </div>
+
     </div>
+
   </section>
 
   <section class="register-section" id="register">
+
     <div class="container">
+
       <div class="section-head reveal">
+
         <div class="kicker">Your rewards are one step away</div>
+
         <h2>📱 Register or Check Your Points</h2>
+
         <p>One number is all you need. No card, no app.</p>
+
       </div>
+
       <div class="reg-card reveal">
+
         <h2>Welcome to Shree Krishan Uniform!</h2>
+
         <p class="note">Enter your WhatsApp number to register or check your existing points.</p>
+
         <div class="input-row">
+
           <span class="prefix">+91</span>
+
           <input type="tel" id="phone" placeholder="98765 43210" maxlength="10" inputmode="numeric" autocomplete="tel-national" aria-label="10 digit mobile number">
+
         </div>
+
         <button class="reg-btn" id="regBtn" onclick="registerCustomer()">Continue →</button>
+
         <div class="msg" id="msg" role="status" aria-live="polite"></div>
+
         <div class="result" id="result">
+
           <div class="big"><span id="ptsNum">0</span><small>Your total points</small></div>
+
           <div class="bar"><div class="fill" id="fill"></div></div>
+
           <div class="remain" id="remain"></div>
+
         </div>
+
         <a href="/staff/" id="staffBtn" class="staff-link" onclick="goStaff(event)">🔐 Open Add Purchase →</a>
+
         {% csrf_token %}
+
       </div>
+
     </div>
+
   </section>
 
   <section>
+
     <div class="container">
+
       <div class="section-head reveal"><div class="kicker">A little extra for every shopper</div><h2>🎉 Benefits of Joining</h2><p>Make every school-shopping trip more rewarding.</p></div>
+
       <div class="benefits">
+
         <article class="benefit reveal"><div class="ic">🎁</div><h3>Earn Points</h3><p>Get points on every purchase.</p></article>
+
         <article class="benefit reveal"><div class="ic">💸</div><h3>Save More</h3><p>Redeem points for discounts.</p></article>
+
         <article class="benefit reveal"><div class="ic">📲</div><h3>WhatsApp Updates</h3><p>Receive your points summary.</p></article>
+
         <article class="benefit reveal"><div class="ic">📜</div><h3>Purchase Record</h3><p>Your shopping history stays recorded.</p></article>
+
       </div>
+
     </div>
+
   </section>
+
 </main>
 
 <footer id="footer">
+
   <strong>Shree Krishan Uniform</strong><br>
+
   📍 <span id="f-addr"></span> &nbsp; | &nbsp; 📞 <span id="f-phone"></span><br>
+
   <a href="/staff/">Add Purchase</a> &nbsp;|&nbsp; <a href="/manage/">Manage Schools</a>
+
   <div class="by">Website by Raghav Bhola</div>
+
 </footer>
 
 <script>
+
   // Update the shop details here.
+
   const SHOP = {
+
     whatsapp: '91XXXXXXXXXX', // 91 + 10 digit number, without + or spaces
+
     phone: '+91 XXXXX XXXXX',
+
     address: '[Your Shop Address]',
+
     goal: 1000,
+
     discount: 85
+
   };
 
   const SCHOOLS = JSON.parse(document.getElementById('schools-data').textContent);
+
   const COMMON = JSON.parse(document.getElementById('common-data').textContent);
+
   const ICONS = { shirt:'👕', dress:'👗', trouser:'👖', tie:'👔', belt:'🪢', shoes:'👟', socks:'🧦', bag:'🎒', tiffin:'🍱', bottle:'🍶' };
 
   function esc(value) {
+
     return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
   }
+
   function icon(name) {
+
     const n = String(name || '').toLowerCase();
+
     for (const key in ICONS) if (n.includes(key)) return ICONS[key];
+
     return '🏷️';
+
   }
+
   function card(p) {
+
     const pic = p.image
+
       ? '<img src="' + esc(p.image) + '" alt="' + esc(p.name) + '" loading="lazy">'
+
       : '<div class="product-icon">' + icon(p.name) + '</div>';
+
     return '<article class="product">' + pic +
+
       '<h3>' + esc(p.name) + '</h3>' +
+
       (p.cls ? '<div class="pinfo">' + esc(p.cls) + '</div>' : '') +
+
       (p.sizes ? '<div class="pinfo">Size: ' + esc(p.sizes) + '</div>' : '') +
+
       '<div class="price">₹' + esc(p.price) + '</div></article>';
+
   }
 
   document.getElementById('schoolList').innerHTML = SCHOOLS
+
     .map(s => '<option value="' + esc(s.name) + '" label="' + esc(s.area) + '"></option>').join('');
 
   if (COMMON.length) {
+
     document.getElementById('commonHead').style.display = 'block';
+
     document.getElementById('commonList').innerHTML = COMMON.map(card).join('');
+
   }
 
   let current = null, currentClass = 'All';
+
   function drawProducts() {
+
     const list = document.getElementById('productList');
+
     const msg = document.getElementById('schoolMsg');
+
     const tabs = document.getElementById('classTabs');
+
     if (!current) {
+
       list.innerHTML = ''; tabs.innerHTML = '';
+
       msg.style.display = 'block';
+
       msg.textContent = 'Select your school above to view its uniform list here.';
+
       return;
+
     }
+
     const all = current.products || [];
+
     const classes = ['All', ...new Set(all.map(p => p.cls).filter(Boolean))];
+
     tabs.innerHTML = classes.map(c =>
+
       '<button type="button" class="tab' + (c === currentClass ? ' on' : '') + '" data-c="' + esc(c) + '">' + esc(c) + '</button>').join('');
+
     tabs.querySelectorAll('.tab').forEach(b => b.onclick = () => { currentClass = b.dataset.c; drawProducts(); });
+
     const shown = currentClass === 'All' ? all : all.filter(p => p.cls === currentClass);
+
     if (!all.length) {
+
       msg.style.display = 'block';
+
       msg.textContent = 'Uniform list for this school will be added soon. Please contact us on WhatsApp.';
+
     } else {
+
       msg.style.display = 'none';
+
     }
+
     list.innerHTML = shown.map(card).join('');
+
   }
 
   document.getElementById('schoolInput').addEventListener('input', e => {
+
     const value = e.target.value.trim().toLowerCase();
+
     current = SCHOOLS.find(s => s.name.toLowerCase() === value) || null;
+
     currentClass = 'All';
+
     drawProducts();
+
     if (!current && value) {
+
       const msg = document.getElementById('schoolMsg');
+
       msg.style.display = 'block';
+
       msg.textContent = 'School not found in the list. Please contact us to check availability.';
+
     }
+
   });
 
   const waText = encodeURIComponent('Namaste, mujhe school uniform order karni hai.');
+
   document.getElementById('wa-hero').href = 'https://wa.me/' + SHOP.whatsapp + '?text=' + waText;
+
   document.getElementById('f-addr').textContent = SHOP.address;
+
   document.getElementById('f-phone').textContent = SHOP.phone;
 
   function csrfToken() {
+
     const el = document.querySelector('[name=csrfmiddlewaretoken]');
+
     return el ? el.value : '';
+
   }
+
   function showMsg(text, ok) {
+
     const m = document.getElementById('msg');
+
     m.className = 'msg ' + (ok ? 'success' : 'error');
+
     m.style.display = 'block';
+
     m.textContent = text;
+
   }
+
   function goStaff(e) {
+
     e.preventDefault();
+
     const phone = document.getElementById('phone').value.trim();
+
     window.location.href = /^\d{10}$/.test(phone) ? '/staff/?phone=' + encodeURIComponent(phone) : '/staff/';
+
   }
+
   function registerCustomer() {
+
     const phone = document.getElementById('phone').value.trim();
+
     const btn = document.getElementById('regBtn');
+
     const result = document.getElementById('result');
+
     if (!/^\d{10}$/.test(phone)) {
+
       result.style.display = 'none';
+
       showMsg('Please enter a valid 10-digit mobile number.', false);
+
       return;
+
     }
+
     btn.disabled = true;
+
     btn.textContent = 'Please wait...';
+
     fetch('/register/', {
+
       method: 'POST',
+
       headers: {'Content-Type':'application/x-www-form-urlencoded','X-CSRFToken':csrfToken()},
+
       body: 'phone=' + encodeURIComponent(phone)
+
     })
+
     .then(r => r.json())
+
     .then(data => {
+
       if (data.success) {
+
         showMsg('✅ ' + data.message, true);
+
         const pts = Number(data.points) || 0;
+
         document.getElementById('ptsNum').textContent = pts.toLocaleString('en-IN');
+
         document.getElementById('fill').style.width = Math.min(pts / SHOP.goal * 100, 100) + '%';
+
         const left = Math.max(SHOP.goal - pts, 0);
+
         document.getElementById('remain').textContent = left > 0
+
           ? '🎯 ' + left + ' more points to unlock ₹' + SHOP.discount + ' off.'
+
           : '🎉 Congratulations! You can redeem ₹' + SHOP.discount + ' off on your next purchase.';
+
         result.style.display = 'block';
+
       } else {
+
         result.style.display = 'none';
+
         showMsg('❌ ' + (data.message || 'Unable to continue. Please try again.'), false);
+
       }
+
     })
+
     .catch(() => showMsg('❌ Something went wrong. Please try again in a moment.', false))
+
     .finally(() => { btn.disabled = false; btn.textContent = 'Continue →'; });
+
   }
+
   document.getElementById('phone').addEventListener('keydown', e => {
+
     if (e.key === 'Enter') registerCustomer();
+
   });
 
   // Gentle reveal animation as sections enter the screen.
+
   const revealObserver = new IntersectionObserver(entries => {
+
     entries.forEach(entry => {
+
       if (entry.isIntersecting) {
+
         entry.target.classList.add('visible');
+
         revealObserver.unobserve(entry.target);
+
       }
+
     });
+
   }, {threshold: 0.12});
+
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
 </script>
 
 {% if request.user.is_authenticated %}
+
 <a href="/manage/" style="position:fixed;right:18px;bottom:18px;z-index:20;background:#ffc928;color:#10234b;padding:12px 16px;border-radius:999px;text-decoration:none;font-weight:900;box-shadow:0 8px 25px #0002">⚙️ Manage Schools</a>
+
 {% endif %}
+
+<script>
+(() => {
+  const items = [
+    { emoji: "👕", name: "Shirts" },
+    { emoji: "👖", name: "Trousers" },
+    { emoji: "👟", name: "Shoes" },
+    { emoji: "🎒", name: "School Bags" },
+    { emoji: "🧦", name: "Socks" },
+    { emoji: "👔", name: "Ties" },
+    { emoji: "🍱", name: "Lunch Box" },
+    { emoji: "🚰", name: "Water Bottle" }
+  ];
+
+  const card = document.getElementById("uniformCard");
+  const art = document.getElementById("uniformArt");
+  const label = document.getElementById("uniformRotator");
+
+  if (!card || !art || !label) return;
+
+  let index = 0;
+
+  window.setInterval(() => {
+    card.classList.add("changing");
+
+    window.setTimeout(() => {
+      index = (index + 1) % items.length;
+      art.textContent = items[index].emoji;
+      label.textContent = items[index].name;
+      card.classList.remove("changing");
+    }, 300);
+  }, 1800);
+})();
+</script>
+
 </body>
+
 </html>
