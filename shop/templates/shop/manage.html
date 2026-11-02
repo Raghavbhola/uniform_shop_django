@@ -40,34 +40,34 @@
     {% if messages %}{% for m in messages %}<div class="flash {{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
 
     <div class="card">
-      <h2>1. Naya school add karo</h2>
+      <h2>1. Add New school</h2>
       <form method="post">{% csrf_token %}
         <input type="hidden" name="action" value="add_school">
-        <label>School ka naam</label>
-        <input name="name" placeholder="Jaise DAV Public School" required>
+        <label>School Name</label>
+        <input name="name" placeholder="Ex. DAV Public School" required>
         <label>Area (optional)</label>
-        <input name="area" placeholder="Jaise Jagadhri">
-        <button class="main">School add karo</button>
+        <input name="area" placeholder="Ex. Jagadhri">
+        <button class="main">Add School</button>
       </form>
     </div>
 
     <div class="card">
-      <h2>2. School ki dress add karo</h2>
+      <h2>2. Add your School Dress</h2>
       <form method="post" enctype="multipart/form-data">{% csrf_token %}
         <input type="hidden" name="action" value="add_product">
         <label>School</label>
         <select name="school">
-          <option value="">Sabhi schools ke liye (jaise socks, bag)</option>
+          <option value="">For All Schools (like:- socks, bag, dress etc.)</option>
           {% for s in schools %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}
         </select>
-        <label>Item ka naam</label>
+        <label>Item Name</label>
         <input name="name" placeholder="Shirt, Trouser, Girls Dress, Tie..." required>
         <label>Class (optional)</label>
-        <input name="class_group" placeholder="Jaise Nursery - 5th">
+        <input name="class_group" placeholder="Ex. Nursery - 5th">
         <label>Sizes (optional)</label>
-        <input name="sizes" placeholder="Jaise 22, 24, 26, 28">
+        <input name="sizes" placeholder="Ex. 22, 24, 26, 28">
         <label>Price (&#8377;)</label>
-        <input name="price" type="number" step="0.01" min="1" placeholder="Jaise 320" required>
+        <input name="price" type="number" step="0.01" min="1" placeholder="Ex. 320" required>
         <label>Dress ki photo (optional)</label>
         <input name="image" type="file" accept="image/*">
         <div class="hint">Phone se seedha photo bhi le sakte ho. Maximum 5 MB.</div>
@@ -95,7 +95,7 @@
       {% empty %}<div style="color:#94a3b8">Abhi koi school nahi hai.</div>{% endfor %}
 
       {% if common %}
-        <h3 style="color:#1e3a8a;margin:6px 0">Sabhi schools ke liye</h3>
+        <h3 style="color:#1e3a8a;margin:6px 0">For All School</h3>
         {% for p in common %}
           <div class="item">
             {% if p.image %}<img src="{{ p.image.url }}" alt="">{% else %}<div class="noimg">&#127890;</div>{% endif %}
