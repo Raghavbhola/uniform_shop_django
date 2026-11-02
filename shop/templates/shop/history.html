@@ -43,10 +43,12 @@
     <div class="card">
       <h3 style="margin-top:0">Purchase history</h3>
       <table>
-        <tr><th>Date</th><th>Amount</th><th>Points</th></tr>
+        {% comment %} <tr><th>Date</th><th>Amount</th><th>Points</th></tr> {% endcomment %}
+        <tr><th>Date</th><th>Items</th><th>Amount</th><th>Points</th></tr>        
         {% for p in purchases %}
         <tr>
           <td>{{ p.created_at|date:"d M Y, h:i A" }}</td>
+          <td>{{ p.items|default:"-" }}</td>
           <td>&#8377;{{ p.amount }}</td>
           <td>+{{ p.points_earned }}</td>
         </tr>

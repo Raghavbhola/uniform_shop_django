@@ -235,6 +235,8 @@ function getCookie(name) {
 </body>
 </html> {% endcomment %}
 
+
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -319,7 +321,22 @@ function getCookie(name) {
     footer strong { color:#fff; font-size:1rem; }
     footer a { color:#BBDEFB; }
     .by { margin-top:8px; font-size:.78rem; opacity:.8; }
+    .school-pick { max-width:460px; margin:0 auto 1rem; }
+    .school-pick input { width:100%; padding:13px; font-size:1rem; border:1.5px solid #cbd5e1; border-radius:12px; outline:none; }
+    .school-pick input:focus { border-color:var(--blue); }
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:0 0 1rem; }
+    .tab { padding:8px 14px; border-radius:20px; border:1.5px solid #BBDEFB; background:#fff; color:var(--blue); font-size:.85rem; cursor:pointer; }
+    .tab.on { background:var(--blue); color:#fff; font-weight:700; }
+    .pinfo { margin-top:6px; font-size:.78rem; color:#64748b; }
+    .hint-box { text-align:center; color:#64748b; padding:1.2rem; background:var(--light); border-radius:12px; font-size:.92rem; }
+    .subhead { text-align:center; color:var(--blue); margin:1.6rem 0 .8rem; font-size:1.1rem; }
+    footer a { color:#BBDEFB; }
+    .by { margin-top:8px; font-size:.78rem; opacity:.8; }
+
+    .product img { width:100%; height:130px; object-fit:cover; border-radius:10px; margin-bottom:4px; }
+    .staff-fab { position:fixed; ... }
   </style>
+
 </head>
 <body>
 
@@ -349,7 +366,7 @@ function getCookie(name) {
   </div>
 </section>
 
-<section style="background:#fff">
+{% comment %} <section style="background:#fff">
   <div class="container">
     <h2 class="title">🛍️ Hamare Products</h2>
     <p class="sub">School ki zaroorat ka sara saaman</p>
@@ -362,7 +379,28 @@ function getCookie(name) {
       <div class="product"><span>🎒</span><h3>School Bag</h3><p>₹350</p></div>
     </div>
   </div>
+</section> {% endcomment %}
+<section style="background:#fff" id="products">
+  <div class="container">
+    <h2 class="title">🛍️ Apne school ki uniform dekho</h2>
+    <p class="sub">School chuno, phir class aur size ke hisaab se items aur price dekho</p>
+
+    <div class="school-pick">
+      <input type="text" id="schoolInput" list="schoolList" placeholder="🔎 School ka naam likho ya chuno" autocomplete="off">
+      <datalist id="schoolList"></datalist>
+    </div>
+
+    <div class="tabs" id="classTabs"></div>
+    <div id="schoolMsg" class="hint-box">Upar apna school chuno, to uski uniform ki list yahan dikhegi.</div>
+    <div class="products" id="productList"></div>
+
+    <h3 class="subhead" id="commonHead" style="display:none">Sabhi schools ke liye</h3>
+    <div class="products" id="commonList"></div>
+  </div>
 </section>
+
+{{ schools|json_script:"schools-data" }}
+{{ common|json_script:"common-data" }}
 
 <section>
   <div class="container">
@@ -430,7 +468,9 @@ function getCookie(name) {
 <footer>
   <strong>Shree Krishan Uniform</strong><br>
   📍 <span id="f-addr"></span> &nbsp;|&nbsp; 📞 <span id="f-phone"></span><br>
-  <a href="/staff/">Staff Login</a>
+  
+  {% comment %} <a href="/staff/">Staff Login</a> {% endcomment %}
+  <a href="/staff/">Add Purchase</a> &nbsp;|&nbsp; <a href="/manage/">Manage Schools</a>
   <div class="by">Website by Raghav Bhola</div>
 </footer>
 
@@ -442,6 +482,83 @@ function getCookie(name) {
     address:  '[Aapka Address]',
     goal:     1000                      // discount ke liye points
   };
+
+  const SCHOOLS = JSON.parse(document.getElementById('schools-data').textContent);
+  const COMMON = JSON.parse(document.getElementById('common-data').textContent);
+  const ICONS = { shirt:'👕', dress:'👗', trouser:'👖', tie:'👔', belt:'🪢', shoes:'👟', socks:'🧦', bag:'🎒', tiffin:'🍱', bottle:'🍶' };
+
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function icon(name) {
+    const n = name.toLowerCase();
+    for (const k in ICONS) if (n.includes(k)) return ICONS[k];
+    return '🏷️';
+  }
+  {% comment %} function card(p) {
+    return '<div class="product"><span>' + icon(p.name) + '</span>' +
+      '<h3>' + esc(p.name) + '</h3>' +
+      (p.cls ? '<div class="pinfo">' + esc(p.cls) + '</div>' : '') +
+      (p.sizes ? '<div class="pinfo">Size: ' + esc(p.sizes) + '</div>' : '') +
+      '<p>₹' + p.price + '</p></div>';
+  } {% endcomment %}
+
+  function card(p) {
+    const pic = p.image
+      ? '<img src="' + esc(p.image) + '" alt="' + esc(p.name) + '" loading="lazy">'
+      : '<span>' + icon(p.name) + '</span>';
+    return '<div class="product">' + pic +
+      '<h3>' + esc(p.name) + '</h3>' +
+      (p.cls ? '<div class="pinfo">' + esc(p.cls) + '</div>' : '') +
+      (p.sizes ? '<div class="pinfo">Size: ' + esc(p.sizes) + '</div>' : '') +
+      '<p>₹' + p.price + '</p></div>';
+  }
+
+  // School ki list datalist mein
+  document.getElementById('schoolList').innerHTML = SCHOOLS
+    .map(s => '<option value="' + esc(s.name) + '" label="' + esc(s.area) + '"></option>').join('');
+
+  // Sabhi schools ke common items
+  if (COMMON.length) {
+    document.getElementById('commonHead').style.display = 'block';
+    document.getElementById('commonList').innerHTML = COMMON.map(card).join('');
+  }
+
+  let current = null, currentClass = 'All';
+
+  function drawProducts() {
+    const list = document.getElementById('productList');
+    const msg = document.getElementById('schoolMsg');
+    const tabs = document.getElementById('classTabs');
+    if (!current) { list.innerHTML = ''; tabs.innerHTML = ''; msg.style.display = 'block'; return; }
+
+    const all = current.products;
+    const classes = ['All', ...new Set(all.map(p => p.cls).filter(Boolean))];
+    tabs.innerHTML = classes.map(c =>
+      '<button type="button" class="tab' + (c === currentClass ? ' on' : '') + '" data-c="' + esc(c) + '">' + esc(c) + '</button>').join('');
+    tabs.querySelectorAll('.tab').forEach(b => b.onclick = () => { currentClass = b.dataset.c; drawProducts(); });
+
+    const shown = currentClass === 'All' ? all : all.filter(p => p.cls === currentClass);
+    if (!all.length) {
+      msg.style.display = 'block';
+      msg.textContent = 'Is school ki list jaldi add hogi. Abhi WhatsApp par puchh lijiye.';
+    } else {
+      msg.style.display = 'none';
+    }
+    list.innerHTML = shown.map(card).join('');
+  }
+
+  document.getElementById('schoolInput').addEventListener('input', e => {
+    const v = e.target.value.trim().toLowerCase();
+    current = SCHOOLS.find(s => s.name.toLowerCase() === v) || null;
+    currentClass = 'All';
+    drawProducts();
+    if (!current && v) {
+      const m = document.getElementById('schoolMsg');
+      m.style.display = 'block';
+      m.textContent = 'Ye school list mein nahi mila. Naya school jaldi add hoga, WhatsApp par puchh lijiye.';
+    }
+  });
 
   const waText = encodeURIComponent('Namaste, mujhe uniform order karni hai.');
   document.getElementById('wa-hero').href = 'https://wa.me/' + SHOP.whatsapp + '?text=' + waText;
@@ -510,5 +627,8 @@ function getCookie(name) {
   });
 </script>
 
+{% if request.user.is_authenticated %}
+<a class="staff-fab" href="/manage/">⚙️ Manage Schools</a>
+{% endif %}
 </body>
 </html>
