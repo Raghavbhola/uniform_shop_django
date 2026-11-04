@@ -57,6 +57,16 @@
         {% endfor %}
       </table>
     </div>
+        {% comment %} <!-- YAHAN paste karo: Online orders wala card --> {% endcomment %}
+    <div class="card">
+      <h3 style="margin-top:0">Online orders</h3>
+      {% for o in orders %}
+        <div style="padding:8px 0;border-bottom:1px solid #e2e8f0;font-size:14px">
+          <a href="{% url 'bill' o.token %}">{{ o.bill_no }}</a> | {{ o.created_at|date:"d M Y" }} | &#8377;{{ o.total }} | {{ o.get_status_display }}
+          <div style="color:#64748b">{% for l in o.lines.all %}{{ l.name }} x{{ l.quantity }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+        </div>
+      {% empty %}<div style="color:#94a3b8">Koi online order nahi.</div>{% endfor %}
+    </div>
   </div>
 </body>
 </html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bill {{ order.bill_no }}</title>
+  <style>
+    *{box-sizing:border-box} body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b}
+    .wrap{max-width:560px;margin:18px auto;padding:0 14px 30px}
+    .card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(15,23,42,.08);margin-bottom:14px}
+    h1{margin:0;color:#1e3a8a;font-size:20px} .muted{color:#64748b;font-size:13px}
+    table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+    th,td{padding:8px 4px;border-bottom:1px solid #e2e8f0;text-align:left} th{color:#64748b}
+    .r{text-align:right} .total td{font-weight:800;font-size:16px;border-bottom:0}
+    .tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+    .ok{background:#dcfce7;color:#166534} .pend{background:#fef3c7;color:#92400e}
+    .btn{display:block;text-align:center;padding:13px;border-radius:10px;text-decoration:none;color:#fff;font-weight:700;margin-top:10px}
+    .b1{background:#2563eb}.b2{background:#dc2626}.b3{background:#22c55e}.b4{background:#7c3aed}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>{{ shop.name }}</h1>
+    <div class="muted">{{ shop.address }} | {{ shop.phone }}</div>
+    <hr style="border:0;border-top:1px solid #e2e8f0;margin:14px 0">
+    <div><b>Bill No:</b> {{ order.bill_no }}</div>
+    <div class="muted">{{ order.created_at|date:"d M Y, h:i A" }}</div>
+    <div style="margin-top:10px"><b>{{ order.full_name }}</b><br>&#128222; {{ order.phone }}<br>&#128205; {{ order.address }}</div>
+    <div style="margin-top:10px">
+      {{ order.get_payment_method_display }}
+      <span class="tag {% if order.paid %}ok{% else %}pend{% endif %}">{% if order.paid %}Paid{% else %}Payment pending{% endif %}</span>
+      <span class="tag pend">{{ order.get_status_display }}</span>
+    </div>
+    <table>
+      <tr><th>Item</th><th>Qty</th><th class="r">Amount</th></tr>
+      {% for l in order.lines.all %}
+      <tr>
+        <td>{{ l.name }}<div class="muted">{{ l.school }}{% if l.class_group %} | {{ l.class_group }}{% endif %}{% if l.size %} | Size {{ l.size }}{% endif %}</div></td>
+        <td>{{ l.quantity }}</td>
+        <td class="r">&#8377;{{ l.line_total }}</td>
+      </tr>
+      {% endfor %}
+      <tr class="total"><td colspan="2">Total</td><td class="r">&#8377;{{ order.total }}</td></tr>
+    </table>
+  </div>
+  {% if upi_link %}<a class="btn b4" href="{{ upi_link }}">&#128241; UPI se pay karo (&#8377;{{ order.total }})</a>
+  <div class="muted" style="text-align:center;margin-top:6px">Pay karne ke baad shop paisa check karke "Paid" mark karega.</div>{% endif %}
+  <a class="btn b2" href="{% url 'bill_pdf' order.token %}">&#128196; Bill PDF download</a>
+  <a class="btn b3" href="{{ wa_link }}" target="_blank">&#128242; Shop ko WhatsApp karo</a>
+  <a class="btn b1" href="/">&larr; Home</a>
+  <div class="muted" style="text-align:center;margin-top:12px">Is page ka link save kar lo, ye aapka bill hai.</div>
+</div>
+</body>
+</html>

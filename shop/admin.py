@@ -77,3 +77,18 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ("school", "in_stock")
     search_fields = ("name", "school__name")
     list_editable = ("price", "in_stock")
+
+from .models import Order, OrderItem
+
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ("bill_no", "full_name", "phone", "total", "payment_method", "paid", "status", "created_at")
+    list_filter = ("status", "payment_method", "paid")
+    search_fields = ("first_name", "last_name", "phone")
+    inlines = [OrderItemInline]    

@@ -1,5 +1,5 @@
 from django.db import models
-
+import uuid
 # Create your models here.
 class Customer(models.Model):
     phone = models.CharField(max_length=10, unique=True)
@@ -53,6 +53,52 @@ class PurchaseItem(models.Model):
     purchase = models.ForeignKey('Purchase', on_delete=models.CASCADE, related_name='line_items')    
     product = models.ForeignKey(Product, null=True, blank=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=200)
+    size = models.CharField(max_length=20, blank=True)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+
+    @property
+    def line_total(self):
+        return self.price * self.quantity    
+
+class Order(models.Model):
+    PAYMENT = [('COD', 'Cash on Delivery'), ('UPI', 'UPI')]
+    STATUS = [('new', 'New'), ('confirmed', 'Confirmed'),
+              ('delivered', 'Delivered'), ('cancelled', 'Cancelled')]
+
+    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    first_name = models.CharField(max_length=60)
+    last_name = models.CharField(max_length=60, blank=True)
+    phone = models.CharField(max_length=10)
+    address = models.TextField(max_length=300)
+    payment_method = models.CharField(max_length=3, choices=PAYMENT)
+    paid = models.BooleanField(default=False)
+    status = models.CharField(max_length=10, choices=STATUS, default='new')
+    total = models.DecimalField(max_digits=9, decimal_places=2)
+    points_given = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}".strip()
+
+    @property
+    def bill_no(self):
+        return f"SKU-{self.id:05d}"
+
+    def __str__(self):
+        return f"{self.bill_no} - {self.full_name}"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='lines')
+    product = models.ForeignKey(Product, null=True, blank=True, on_delete=models.SET_NULL)
+    name = models.CharField(max_length=100)
+    school = models.CharField(max_length=150, blank=True)
+    class_group = models.CharField(max_length=50, blank=True)
     size = models.CharField(max_length=20, blank=True)
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=8, decimal_places=2)

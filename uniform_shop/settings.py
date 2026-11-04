@@ -134,3 +134,11 @@ if not DEBUG:
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'    
+
+SHOP_INFO = {
+    'name': 'Shree Krishan Uniform',
+    'phone': '+91 XXXXX XXXXX',
+    'address': '[Shop Address]',
+    'whatsapp': '91XXXXXXXXXX',
+    'upi_id': os.environ.get('SHOP_UPI_ID', ''),  # jaise shopname@upi
+}

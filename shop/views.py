@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
-from .models import Customer, Purchase , School, Product
+from .models import Customer, Purchase , School, Product , Order, OrderItem
 from django.contrib.auth.decorators import login_required
 from urllib.parse import quote
 
@@ -18,6 +18,13 @@ from django.contrib import messages
 
 import os
 import requests
+
+import json
+from decimal import Decimal
+from xml.sax.saxutils import escape
+from django.conf import settings
+from django.db import transaction
+from django.urls import reverse
 
 
 def send_whatsapp(phone, amount, pts, total, remaining):
@@ -76,7 +83,8 @@ def home(request):
             'cls': p.class_group,
             'sizes': p.sizes,
             'price': float(p.price),
-            'image': p.image.url if p.image else '',            
+            'image': p.image.url if p.image else '',  
+            'id': p.id,                      
         }
 
 
@@ -260,6 +268,7 @@ def history(request, phone):
         'customer': customer,
         'purchases': purchases,
         'total_spent': total_spent,
+        'orders': Order.objects.filter(phone=phone).prefetch_related('lines'),        
     })
 
 
@@ -306,3 +315,144 @@ def history_pdf(request, phone):
     response = HttpResponse(buf.getvalue(), content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="history_{customer.phone}.pdf"'
     return response
+
+def place_order(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Galat request.'}, status=405)
+    try:
+        data = json.loads(request.body)
+    except ValueError:
+        return JsonResponse({'success': False, 'message': 'Galat data.'}, status=400)
+
+    def bad(m):
+        return JsonResponse({'success': False, 'message': m})
+
+    first = str(data.get('first_name', '')).strip()[:60]
+    last = str(data.get('last_name', '')).strip()[:60]
+    phone = str(data.get('phone', '')).strip()
+    address = str(data.get('address', '')).strip()[:300]
+    pay = data.get('payment')
+
+    if not first:
+        return bad('First name likho.')
+    if not (phone.isdigit() and len(phone) == 10):
+        return bad('10 digit ka phone number likho.')
+    if len(address) < 10:
+        return bad('Poora address likho.')
+    if pay not in ('COD', 'UPI'):
+        return bad('Payment ka tareeka chuno.')
+
+    lines, total = [], Decimal('0')
+    for c in (data.get('cart') or [])[:30]:
+        if not isinstance(c, dict):
+            continue
+        try:
+            pid, qty = int(c.get('id')), int(c.get('qty'))
+        except (TypeError, ValueError):
+            continue
+        if not 1 <= qty <= 20:
+            continue
+        p = Product.objects.filter(id=pid, in_stock=True).select_related('school').first()
+        if not p:
+            continue
+        lines.append((p, str(c.get('size', ''))[:20], qty))
+        total += p.price * qty
+    if not lines:
+        return bad('Cart khali hai ya items available nahi hain.')
+
+    with transaction.atomic():
+        order = Order.objects.create(
+            first_name=first, last_name=last, phone=phone, address=address,
+            payment_method=pay, total=total)
+        OrderItem.objects.bulk_create([
+            OrderItem(order=order, product=p, name=p.name,
+                      school=p.school.name if p.school else 'All schools',
+                      class_group=p.class_group, size=size, quantity=qty, price=p.price)
+            for p, size, qty in lines])
+    return JsonResponse({'success': True, 'bill_url': reverse('bill', args=[order.token])})
+
+
+def bill(request, token):
+    order = get_object_or_404(Order, token=token)
+    shop = settings.SHOP_INFO
+    upi_link = ''
+    if order.payment_method == 'UPI' and not order.paid and shop.get('upi_id'):
+        upi_link = (f"upi://pay?pa={shop['upi_id']}&pn={quote(shop['name'])}"
+                    f"&am={order.total}&cu=INR&tn={order.bill_no}")
+    wa_text = f"Namaste, maine order kiya hai. Bill: {request.build_absolute_uri()}"
+    return render(request, 'shop/bill.html', {
+        'order': order, 'shop': shop, 'upi_link': upi_link,
+        'wa_link': f"https://wa.me/{shop['whatsapp']}?text={quote(wa_text)}",
+    })
+
+
+def bill_pdf(request, token):
+    order = get_object_or_404(Order, token=token)
+    shop = settings.SHOP_INFO
+    st = getSampleStyleSheet()
+    when = timezone.localtime(order.created_at).strftime("%d-%m-%Y %I:%M %p")
+    els = [
+        Paragraph(escape(shop['name']), st['Title']),
+        Paragraph(escape(f"{shop['address']} | {shop['phone']}"), st['Normal']),
+        Spacer(1, 10),
+        Paragraph(f"<b>Bill No:</b> {order.bill_no} &nbsp;&nbsp; <b>Date:</b> {when}", st['Normal']),
+        Paragraph(f"<b>Customer:</b> {escape(order.full_name)} | {order.phone}", st['Normal']),
+        Paragraph(f"<b>Address:</b> {escape(order.address)}", st['Normal']),
+        Paragraph(f"<b>Payment:</b> {order.get_payment_method_display()} - "
+                  f"{'Paid' if order.paid else 'Pending'}", st['Normal']),
+        Spacer(1, 12),
+    ]
+    data = [["#", "Item", "Size", "Qty", "Price", "Total"]]
+    for n, l in enumerate(order.lines.all(), 1):
+        label = f"{l.name} ({l.school}{', ' + l.class_group if l.class_group else ''})"
+        data.append([n, Paragraph(escape(label), st['Normal']), l.size or '-',
+                     l.quantity, f"Rs {l.price:g}", f"Rs {l.line_total:g}"])
+    data.append(["", "", "", "", "Total", f"Rs {order.total:g}"])
+    t = Table(data, colWidths=[24, 220, 50, 36, 62, 70])
+    t.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1e3a8a')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ]))
+    els.append(t)
+    buf = BytesIO()
+    SimpleDocTemplate(buf, pagesize=A4).build(els)
+    resp = HttpResponse(buf.getvalue(), content_type='application/pdf')
+    resp['Content-Disposition'] = f'attachment; filename="{order.bill_no}.pdf"'
+    return resp
+
+
+def give_points(order):
+    customer, _ = Customer.objects.get_or_create(phone=order.phone)
+    pts = get_points(float(order.total))
+    customer.points += pts
+    customer.save()
+    items = ", ".join(f"{l.name} x{l.quantity}" for l in order.lines.all())
+    Purchase.objects.create(customer=customer, amount=order.total,
+                            points_earned=pts, items=items[:300])
+    order.points_given = True
+    order.save()
+
+
+@login_required
+def orders(request):
+    if request.method == 'POST':
+        oid = request.POST.get('order_id', '')
+        order = Order.objects.filter(id=oid).first() if oid.isdigit() else None
+        if order:
+            status = request.POST.get('status')
+            if status in dict(Order.STATUS):
+                order.status = status
+            if request.POST.get('paid') in ('0', '1'):
+                order.paid = request.POST.get('paid') == '1'
+            order.save()
+            if order.status == 'delivered' and not order.points_given:
+                give_points(order)
+                messages.success(request, f'{order.bill_no} delivered, points add ho gaye.')
+            else:
+                messages.success(request, f'{order.bill_no} update ho gaya.')
+        return redirect('orders')
+    return render(request, 'shop/orders.html', {
+        'orders': Order.objects.prefetch_related('lines')[:100]})
