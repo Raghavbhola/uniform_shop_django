@@ -3,8 +3,7 @@
     whatsapp: '91XXXXXXXXXX', // 91 + 10 digit number, without + or spaces
     phone: '+91 XXXXX XXXXX',
     address: '[Your Shop Address]',
-    goal: 1000,
-    discount: 85
+    
   };
 
   const SCHOOLS = JSON.parse(document.getElementById('schools-data').textContent);
@@ -122,7 +121,7 @@
         const left = Math.max(SHOP.goal - pts, 0);
         document.getElementById('remain').textContent = left > 0
           ? '🎯 ' + left + ' more points to unlock ₹' + SHOP.discount + ' off.'
-          : '🎉 Congratulations! You can redeem ₹' + SHOP.discount + ' off on your next purchase.';
+          : '🎉 Congratulations! Ask at the shop to redeem ₹' + SHOP.discount + ' off.';
         result.style.display = 'block';
       } else {
         result.style.display = 'none';
