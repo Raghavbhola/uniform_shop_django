@@ -13,5 +13,6 @@ urlpatterns = [
     path('order/', views.place_order, name='place_order'),
     path('bill/<uuid:token>/', views.bill, name='bill'),
     path('bill/<uuid:token>/pdf/', views.bill_pdf, name='bill_pdf'),
-    path('orders/', views.orders, name='orders'),     
+    path('orders/', views.orders, name='orders'),    
+    path('dashboard/', views.dashboard, name='dashboard'), 
 ]

@@ -1,42 +1,710 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Orders</title>
-  <style>
-    *{box-sizing:border-box} body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b}
-    .topbar{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:14px}
-    .topbar a{color:#fff;text-decoration:none;background:rgba(255,255,255,.18);padding:7px 14px;border-radius:20px;font-size:14px}
-    .topbar h1{margin:0;font-size:18px} .wrap{max-width:640px;margin:16px auto;padding:0 14px 40px}
-    .card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 10px rgba(15,23,42,.08);font-size:14px}
-    .muted{color:#64748b;font-size:13px} .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-    select,button{padding:9px;border-radius:8px;border:1.5px solid #cbd5e1;font-size:14px;background:#fff}
-    button{background:#2563eb;color:#fff;border:0;font-weight:700;cursor:pointer}
-    .flash{background:#E8F5E9;color:#2E7D32;padding:10px 14px;border-radius:10px;margin-bottom:10px}
-    ul{margin:8px 0;padding-left:18px}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1e3a8a">
+
+<title>Manage Orders | Shree Krishan Uniform</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.topbar {
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.12);
+}
+
+.topbar a {
+    color: white;
+    text-decoration: none;
+    background: rgba(255,255,255,.18);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.topbar h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.wrap {
+    max-width: 1100px;
+    margin: 22px auto;
+    padding: 0 15px 40px;
+}
+
+/* Heading */
+
+.page-heading {
+    margin-bottom: 20px;
+}
+
+.page-heading h2 {
+    margin: 0 0 5px;
+    font-size: 23px;
+}
+
+.page-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* Summary */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 13px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    background: white;
+    padding: 17px;
+    border-radius: 13px;
+    box-shadow: 0 2px 9px rgba(0,0,0,.05);
+    border-left: 4px solid #2563eb;
+}
+
+.stat span {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.stat strong {
+    font-size: 23px;
+}
+
+/* Filters */
+
+.filter-box {
+    background: white;
+    padding: 16px;
+    border-radius: 13px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 9px rgba(0,0,0,.05);
+}
+
+.filter-box h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 10px;
+}
+
+input, select {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: white;
+    font-size: 14px;
+    outline: none;
+}
+
+input:focus, select:focus {
+    border-color: #2563eb;
+}
+
+.reset-btn {
+    padding: 11px 17px;
+    background: #e2e8f0;
+    color: #334155;
+    text-decoration: none;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Order Card */
+
+.card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 10px rgba(15,23,42,.06);
+    border: 1px solid #e2e8f0;
+}
+
+.order-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-bottom: 13px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.bill-no {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1e3a8a;
+}
+
+.date {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.badge {
+    padding: 6px 11px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.customer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 15px 0;
+}
+
+.info-label {
+    color: #94a3b8;
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.info-value {
+    font-size: 14px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.info-value a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.address {
+    grid-column: 1 / -1;
+}
+
+/* Products */
+
+.product-section {
+    background: #f8fafc;
+    padding: 13px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+}
+
+.product-section h4 {
+    margin: 0 0 10px;
+    font-size: 13px;
+}
+
+.product-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.product-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+}
+
+.product-list li:last-child {
+    border-bottom: 0;
+}
+
+.product-name {
+    font-weight: 600;
+}
+
+.product-detail {
+    color: #64748b;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.product-price {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* Total */
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-top: 1px solid #e2e8f0;
+    margin-bottom: 12px;
+}
+
+.total-row strong {
+    font-size: 20px;
+    color: #1e3a8a;
+}
+
+/* Update section */
+
+.update-box {
+    background: #eff6ff;
+    padding: 14px;
+    border-radius: 11px;
+}
+
+.update-box h4 {
+    margin: 0 0 11px;
+    font-size: 13px;
+    color: #1e3a8a;
+}
+
+.update-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.save-btn {
+    background: #2563eb;
+    color: white;
+    border: 0;
+    padding: 11px 20px;
+    border-radius: 9px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background: #1e40af;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.bill-btn {
+    display: inline-block;
+    background: #0f172a;
+    color: white;
+    text-decoration: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.flash {
+    background: #dcfce7;
+    color: #166534;
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    font-size: 13px;
+}
+
+.empty {
+    text-align: center;
+    padding: 35px 15px;
+    color: #64748b;
+}
+
+.empty-icon {
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+/* Mobile */
+
+@media(max-width:650px) {
+
+    .wrap {
+        margin-top: 16px;
+    }
+
+    .stats {
+        gap: 8px;
+    }
+
+    .stat {
+        padding: 12px 9px;
+    }
+
+    .stat span {
+        font-size: 11px;
+    }
+
+    .stat strong {
+        font-size: 19px;
+    }
+
+    .filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .filters input {
+        grid-column: 1 / -1;
+    }
+
+    .customer {
+        grid-template-columns: 1fr;
+    }
+
+    .address {
+        grid-column: auto;
+    }
+
+    .update-form {
+        grid-template-columns: 1fr;
+    }
+
+    .save-btn {
+        width: 100%;
+    }
+
+    .order-head {
+        align-items: flex-start;
+    }
+
+    .product-list li {
+        font-size: 12px;
+    }
+
+    .total-row strong {
+        font-size: 18px;
+    }
+}
+</style>
 </head>
+
 <body>
-  <div class="topbar"><a href="/staff/">&larr; Staff</a><h1>Orders</h1></div>
-  <div class="wrap">
-    {% for m in messages %}<div class="flash">{{ m }}</div>{% endfor %}
-    {% for o in orders %}
-    <div class="card">
-      <b>{{ o.bill_no }}</b> | {{ o.created_at|date:"d M, h:i A" }}
-      <div style="margin-top:6px"><b>{{ o.full_name }}</b> | <a href="tel:{{ o.phone }}">{{ o.phone }}</a></div>
-      <div class="muted">{{ o.address }}</div>
-      <ul>{% for l in o.lines.all %}<li>{{ l.name }} ({{ l.school }}){% if l.size %}, size {{ l.size }}{% endif %} x{{ l.quantity }} = &#8377;{{ l.line_total }}</li>{% endfor %}</ul>
-      <b>Total &#8377;{{ o.total }}</b> | {{ o.get_payment_method_display }} | {% if o.paid %}&#9989; Paid{% else %}&#9203; Pending{% endif %}
-      <form method="post" class="row">{% csrf_token %}
-        <input type="hidden" name="order_id" value="{{ o.id }}">
-        <select name="status">{% for k,v in o.STATUS %}<option value="{{ k }}" {% if o.status == k %}selected{% endif %}>{{ v }}</option>{% endfor %}</select>
-        <select name="paid"><option value="0" {% if not o.paid %}selected{% endif %}>Unpaid</option><option value="1" {% if o.paid %}selected{% endif %}>Paid</option></select>
-        <button>Save</button>
-        <a href="{% url 'bill' o.token %}" target="_blank" style="align-self:center">Bill</a>
-      </form>
+
+<div class="topbar">
+    <a href="/dashboard/">&larr; Staff</a>
+    <h1>📦 Manage Orders</h1>
+</div>
+
+<div class="wrap">
+
+    <div class="page-heading">
+        <h2>Orders Management</h2>
+        <p>View customer orders, manage payments and update delivery status.</p>
     </div>
-    {% empty %}<div class="card muted">Abhi koi order nahi aaya.</div>{% endfor %}
-  </div>
+
+    {% for m in messages %}
+        <div class="flash">✅ {{ m }}</div>
+    {% endfor %}
+
+    <!-- Search and Filters -->
+
+    <div class="filter-box">
+
+        <h3>🔍 Find Orders</h3>
+
+        <div class="filters">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search name, phone or bill number..."
+            >
+
+            <select id="statusFilter">
+                <option value="">All Status</option>
+                {% for k,v in orders.0.STATUS %}
+                    <option value="{{ v|lower }}">{{ v }}</option>
+                {% endfor %}
+            </select>
+
+            <select id="paymentFilter">
+                <option value="">All Payments</option>
+                <option value="paid">Paid</option>
+                <option value="unpaid">Unpaid</option>
+            </select>
+
+            <a href="{% url 'orders' %}" class="reset-btn">Reset</a>
+
+        </div>
+
+    </div>
+
+    <!-- Orders -->
+
+    <div id="ordersContainer">
+
+    {% for o in orders %}
+
+    <div class="card order-card"
+         data-search="{{ o.bill_no|lower }} {{ o.full_name|lower }} {{ o.phone }}"
+         data-status="{{ o.get_status_display|lower }}"
+         data-payment="{% if o.paid %}paid{% else %}unpaid{% endif %}">
+
+        <div class="order-head">
+
+            <div>
+                <div class="bill-no">🧾 {{ o.bill_no }}</div>
+                <div class="date">
+                    📅 {{ o.created_at|date:"d M Y, h:i A" }}
+                </div>
+            </div>
+
+            <span class="badge">
+                {{ o.get_status_display }}
+            </span>
+
+        </div>
+
+        <!-- Customer Details -->
+
+        <div class="customer">
+
+            <div>
+                <div class="info-label">Customer Name</div>
+                <div class="info-value">{{ o.full_name }}</div>
+            </div>
+
+            <div>
+                <div class="info-label">Phone Number</div>
+                <div class="info-value">
+                    <a href="tel:{{ o.phone }}">📞 {{ o.phone }}</a>
+                </div>
+            </div>
+
+            <div class="address">
+                <div class="info-label">Delivery Address</div>
+                <div class="info-value">
+                    {{ o.address|default:"Address not provided" }}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Products -->
+
+        <div class="product-section">
+
+            <h4>🛍️ Ordered Products</h4>
+
+            <ul class="product-list">
+
+                {% for l in o.lines.all %}
+
+                <li>
+
+                    <div>
+                        <div class="product-name">{{ l.name }}</div>
+
+                        <div class="product-detail">
+                            School: {{ l.school }}
+                            {% if l.size %}
+                                | Size: {{ l.size }}
+                            {% endif %}
+                            | Qty: {{ l.quantity }}
+                        </div>
+                    </div>
+
+                    <div class="product-price">
+                        ₹{{ l.line_total }}
+                    </div>
+
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- Payment Details -->
+
+        <div class="total-row">
+
+            <div>
+                <div class="info-label">Payment Method</div>
+                <div class="info-value">
+                    {{ o.get_payment_method_display }}
+                </div>
+
+                <div style="margin-top:6px;font-size:12px;font-weight:700;
+                color:{% if o.paid %}#15803d{% else %}#dc2626{% endif %}">
+
+                    {% if o.paid %}
+                        ✅ Payment Received
+                    {% else %}
+                        ⏳ Payment Pending
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div style="text-align:right">
+                <div class="info-label">Grand Total</div>
+                <strong>₹{{ o.total }}</strong>
+            </div>
+
+        </div>
+
+        <!-- Update Order -->
+
+        <div class="update-box">
+
+            <h4>⚙️ Update Order</h4>
+
+            <form method="post" class="update-form">
+
+                {% csrf_token %}
+
+                <input type="hidden" name="order_id" value="{{ o.id }}">
+
+                <select name="status" aria-label="Order status">
+
+                    {% for k,v in o.STATUS %}
+
+                    <option value="{{ k }}"
+                        {% if o.status == k %}selected{% endif %}>
+                        {{ v }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <select name="paid" aria-label="Payment status">
+
+                    <option value="0"
+                        {% if not o.paid %}selected{% endif %}>
+                        ⏳ Unpaid
+                    </option>
+
+                    <option value="1"
+                        {% if o.paid %}selected{% endif %}>
+                        ✅ Paid
+                    </option>
+
+                </select>
+
+                <button type="submit" class="save-btn">
+                    Save Changes
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'bill' o.token %}"
+               target="_blank"
+               class="bill-btn">
+                🧾 View / Print Bill
+            </a>
+        </div>
+
+    </div>
+
+    {% empty %}
+
+        <div class="card empty">
+            <div class="empty-icon">📦</div>
+            <h3>No Orders Yet</h3>
+            <p>Abhi koi order receive nahi hua hai.</p>
+        </div>
+
+    {% endfor %}
+
+    </div>
+
+    <div id="noResults" class="card empty" style="display:none">
+        <div class="empty-icon">🔍</div>
+        <h3>No Matching Orders</h3>
+        <p>Try another name, phone number or filter.</p>
+    </div>
+
+</div>
+
+<script>
+
+const searchInput = document.getElementById("searchInput");
+const statusFilter = document.getElementById("statusFilter");
+const paymentFilter = document.getElementById("paymentFilter");
+
+function filterOrders() {
+
+    const search = searchInput.value.toLowerCase().trim();
+    const status = statusFilter.value;
+    const payment = paymentFilter.value;
+
+    const cards = document.querySelectorAll(".order-card");
+
+    let visible = 0;
+
+    cards.forEach(card => {
+
+        const searchData = card.dataset.search;
+        const cardStatus = card.dataset.status;
+        const cardPayment = card.dataset.payment;
+
+        const matchSearch = searchData.includes(search);
+        const matchStatus = !status || cardStatus === status;
+        const matchPayment = !payment || cardPayment === payment;
+
+        if (matchSearch && matchStatus && matchPayment) {
+
+            card.style.display = "";
+            visible++;
+
+        } else {
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+    document.getElementById("noResults").style.display =
+        visible === 0 && cards.length > 0 ? "block" : "none";
+
+}
+
+searchInput.addEventListener("input", filterOrders);
+statusFilter.addEventListener("change", filterOrders);
+paymentFilter.addEventListener("change", filterOrders);
+
+</script>
+
 </body>
 </html>
+

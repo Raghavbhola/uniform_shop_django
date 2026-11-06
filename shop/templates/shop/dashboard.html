@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Owner Dashboard | Shree Krishan Uniform</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b}
+    .topbar{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
+    .topbar h1{margin:0;font-size:18px}
+    .topbar a{color:#fff;text-decoration:none;background:rgba(255,255,255,.18);padding:7px 14px;border-radius:20px;font-size:14px}
+    .wrap{max-width:640px;margin:18px auto;padding:0 14px 40px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+    .stat{background:#fff;border-radius:14px;padding:14px 8px;text-align:center;box-shadow:0 2px 10px rgba(15,23,42,.08)}
+    .stat b{display:block;font-size:22px;color:#1e3a8a}
+    .stat span{font-size:12px;color:#64748b}
+    .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .tile{background:#fff;border-radius:16px;padding:22px 12px;text-align:center;text-decoration:none;color:#1e293b;box-shadow:0 2px 10px rgba(15,23,42,.08);font-weight:700}
+    .tile:hover{transform:translateY(-3px)}
+    .tile .ic{display:block;font-size:34px;margin-bottom:8px}
+    .tile small{display:block;font-weight:400;color:#64748b;margin-top:3px;font-size:12px}
+    .note{margin-top:18px;font-size:12px;color:#94a3b8;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>Owner Dashboard</h1>
+    <a href="{% url 'admin:logout' %}" onclick="event.preventDefault();document.getElementById('lo').submit()">Logout</a>
+    <form id="lo" method="post" action="{% url 'admin:logout' %}" style="display:none">{% csrf_token %}</form>
+  </div>
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>{{ new_orders }}</b><span>Naye orders</span></div>
+      <div class="stat"><b>&#8377;{{ today_sales|floatformat:0 }}</b><span>Aaj ki bikri</span></div>
+      <div class="stat"><b>{{ customers }}</b><span>Customers</span></div>
+    </div>
+    <div class="tiles">
+      <a class="tile" href="/staff/"><span class="ic">&#10133;</span>Add Purchase<small>Counter par bikri</small></a>
+      <a class="tile" href="/orders/"><span class="ic">&#128230;</span>Orders<small>Online orders aur bill</small></a>
+      <a class="tile" href="/manage/"><span class="ic">&#127979;</span>Schools &amp; Dress<small>Naya school, photo, price</small></a>
+      <a class="tile" href="/admin/shop/customer/"><span class="ic">&#128101;</span>Customers<small>Numbers aur points</small></a>
+      <a class="tile" href="/admin/"><span class="ic">&#9881;&#65039;</span>Admin Panel<small>Poora data</small></a>
+      <a class="tile" href="/"><span class="ic">&#127968;</span>Website<small>Customer ko jo dikhta hai</small></a>
+    </div>
+    <div class="note">Ye page sirf owner ke liye hai. Customers ko iska link mat dena.</div>
+  </div>
+</body>
+</html>

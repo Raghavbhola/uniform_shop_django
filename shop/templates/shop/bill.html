@@ -1,55 +1,596 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bill {{ order.bill_no }}</title>
-  <style>
-    *{box-sizing:border-box} body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b}
-    .wrap{max-width:560px;margin:18px auto;padding:0 14px 30px}
-    .card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(15,23,42,.08);margin-bottom:14px}
-    h1{margin:0;color:#1e3a8a;font-size:20px} .muted{color:#64748b;font-size:13px}
-    table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
-    th,td{padding:8px 4px;border-bottom:1px solid #e2e8f0;text-align:left} th{color:#64748b}
-    .r{text-align:right} .total td{font-weight:800;font-size:16px;border-bottom:0}
-    .tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
-    .ok{background:#dcfce7;color:#166534} .pend{background:#fef3c7;color:#92400e}
-    .btn{display:block;text-align:center;padding:13px;border-radius:10px;text-decoration:none;color:#fff;font-weight:700;margin-top:10px}
-    .b1{background:#2563eb}.b2{background:#dc2626}.b3{background:#22c55e}.b4{background:#7c3aed}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1e3a8a">
+
+<title>Invoice {{ order.bill_no }} | {{ shop.name }}</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.wrap {
+    max-width: 620px;
+    margin: 25px auto;
+    padding: 0 14px 35px;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 23px;
+    box-shadow: 0 3px 15px rgba(15,23,42,.07);
+    margin-bottom: 15px;
+}
+
+/* Shop Header */
+
+.shop-header {
+    text-align: center;
+    padding-bottom: 18px;
+    border-bottom: 2px dashed #cbd5e1;
+}
+
+.shop-icon {
+    font-size: 35px;
+    margin-bottom: 8px;
+}
+
+.shop-header h1 {
+    margin: 0;
+    color: #1e3a8a;
+    font-size: 23px;
+}
+
+.shop-header p {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* Invoice Heading */
+
+.invoice-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+.invoice-heading h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.invoice-heading span {
+    color: #64748b;
+    font-size: 12px;
+}
+
+/* Details */
+
+.details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.label {
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.value {
+    font-size: 14px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.customer-box {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 11px;
+    margin-bottom: 18px;
+}
+
+.customer-box h3 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    color: #1e3a8a;
+}
+
+.customer-info {
+    font-size: 13px;
+    line-height: 1.9;
+}
+
+/* Status */
+
+.status-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.tag {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.ok {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.processing {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* Products */
+
+.section-title {
+    font-size: 15px;
+    margin: 0 0 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+th {
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+th, td {
+    padding: 12px 7px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+}
+
+.r {
+    text-align: right;
+}
+
+.item-name {
+    font-weight: 700;
+}
+
+.item-detail {
+    color: #64748b;
+    font-size: 11px;
+    margin-top: 4px;
+    line-height: 1.5;
+}
+
+.total-row td {
+    font-weight: 800;
+    font-size: 16px;
+    color: #1e3a8a;
+    border-bottom: 0;
+}
+
+/* Payment Information */
+
+.payment-note {
+    background: #eff6ff;
+    padding: 13px;
+    border-radius: 10px;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #1e40af;
+    line-height: 1.6;
+}
+
+/* Buttons */
+
+.actions {
+    display: grid;
+    gap: 11px;
+}
+
+.btn {
+    display: block;
+    text-align: center;
+    padding: 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    border: 0;
+    cursor: pointer;
+}
+
+.b1 {
+    background: #2563eb;
+}
+
+.b2 {
+    background: #dc2626;
+}
+
+.b3 {
+    background: #16a34a;
+}
+
+.b4 {
+    background: #7c3aed;
+}
+
+.btn:hover {
+    opacity: .9;
+}
+
+.footer {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 18px;
+}
+
+/* Mobile */
+
+@media(max-width:480px) {
+
+    .wrap {
+        margin: 12px auto;
+    }
+
+    .card {
+        padding: 17px 13px;
+    }
+
+    .shop-header h1 {
+        font-size: 20px;
+    }
+
+    .details {
+        gap: 12px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 10px 5px;
+    }
+
+    .item-detail {
+        font-size: 10px;
+    }
+
+}
+
+/* Print */
+
+@media print {
+
+    body {
+        background: white;
+    }
+
+    .wrap {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+    }
+
+    .actions,
+    .footer {
+        display: none;
+    }
+
+}
+
+</style>
 </head>
+
 <body>
+
 <div class="wrap">
-  <div class="card">
-    <h1>{{ shop.name }}</h1>
-    <div class="muted">{{ shop.address }} | {{ shop.phone }}</div>
-    <hr style="border:0;border-top:1px solid #e2e8f0;margin:14px 0">
-    <div><b>Bill No:</b> {{ order.bill_no }}</div>
-    <div class="muted">{{ order.created_at|date:"d M Y, h:i A" }}</div>
-    <div style="margin-top:10px"><b>{{ order.full_name }}</b><br>&#128222; {{ order.phone }}<br>&#128205; {{ order.address }}</div>
-    <div style="margin-top:10px">
-      {{ order.get_payment_method_display }}
-      <span class="tag {% if order.paid %}ok{% else %}pend{% endif %}">{% if order.paid %}Paid{% else %}Payment pending{% endif %}</span>
-      <span class="tag pend">{{ order.get_status_display }}</span>
+
+    <!-- Invoice -->
+
+    <div class="card">
+
+        <!-- Shop Details -->
+
+        <div class="shop-header">
+
+            <div class="shop-icon">🏫</div>
+
+            <h1>{{ shop.name }}</h1>
+
+            <p>
+                {{ shop.address }}<br>
+                Contact: {{ shop.phone }}
+            </p>
+
+        </div>
+
+        <!-- Invoice Details -->
+
+        <div class="invoice-heading">
+
+            <div>
+                <h2>Order Invoice</h2>
+                <span>Thank you for shopping with us!</span>
+            </div>
+
+            <span>🧾 INVOICE</span>
+
+        </div>
+
+        <div class="details">
+
+            <div>
+                <div class="label">Bill Number</div>
+                <div class="value">{{ order.bill_no }}</div>
+            </div>
+
+            <div>
+                <div class="label">Order Date</div>
+                <div class="value">
+                    {{ order.created_at|date:"d M Y" }}
+                </div>
+            </div>
+
+            <div>
+                <div class="label">Order Time</div>
+                <div class="value">
+                    {{ order.created_at|date:"h:i A" }}
+                </div>
+            </div>
+
+            <div>
+                <div class="label">Payment Method</div>
+                <div class="value">
+                    {{ order.get_payment_method_display }}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Customer Details -->
+
+        <div class="customer-box">
+
+            <h3>👤 Customer Details</h3>
+
+            <div class="customer-info">
+
+                <b>Name:</b> {{ order.full_name }}<br>
+
+                <b>Phone:</b> {{ order.phone }}<br>
+
+                <b>Address:</b>
+                {{ order.address|default:"Not provided" }}
+
+            </div>
+
+        </div>
+
+        <!-- Order Status -->
+
+        <div class="status-row">
+
+            {% if order.paid %}
+
+                <span class="tag ok">
+                    ✓ Payment Paid
+                </span>
+
+            {% else %}
+
+                <span class="tag pending">
+                    ⏳ Payment Pending
+                </span>
+
+            {% endif %}
+
+            <span class="tag processing">
+                Order: {{ order.get_status_display }}
+            </span>
+
+        </div>
+
+        <!-- Products -->
+
+        <h3 class="section-title">🛍️ Order Summary</h3>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th class="r">Amount</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for l in order.lines.all %}
+
+                <tr>
+
+                    <td>
+
+                        <div class="item-name">
+                            {{ l.name }}
+                        </div>
+
+                        <div class="item-detail">
+
+                            {{ l.school }}
+
+                            {% if l.class_group %}
+                                | Class: {{ l.class_group }}
+                            {% endif %}
+
+                            {% if l.size %}
+                                | Size: {{ l.size }}
+                            {% endif %}
+
+                        </div>
+
+                    </td>
+
+                    <td>{{ l.quantity }}</td>
+
+                    <td class="r">
+                        ₹{{ l.line_total }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                <tr class="total-row">
+
+                    <td colspan="2">Grand Total</td>
+
+                    <td class="r">
+                        ₹{{ order.total }}
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <!-- Payment Note -->
+
+        {% if not order.paid %}
+
+        <div class="payment-note">
+
+            <b>Payment Reminder</b><br>
+
+            Your payment is still pending.
+            Please complete your payment using the UPI option below
+            or contact the shop.
+
+        </div>
+
+        {% else %}
+
+        <div class="payment-note">
+
+            <b>Payment Successful ✓</b><br>
+
+            Your payment has been marked as received by the shop.
+
+        </div>
+
+        {% endif %}
+
     </div>
-    <table>
-      <tr><th>Item</th><th>Qty</th><th class="r">Amount</th></tr>
-      {% for l in order.lines.all %}
-      <tr>
-        <td>{{ l.name }}<div class="muted">{{ l.school }}{% if l.class_group %} | {{ l.class_group }}{% endif %}{% if l.size %} | Size {{ l.size }}{% endif %}</div></td>
-        <td>{{ l.quantity }}</td>
-        <td class="r">&#8377;{{ l.line_total }}</td>
-      </tr>
-      {% endfor %}
-      <tr class="total"><td colspan="2">Total</td><td class="r">&#8377;{{ order.total }}</td></tr>
-    </table>
-  </div>
-  {% if upi_link %}<a class="btn b4" href="{{ upi_link }}">&#128241; UPI se pay karo (&#8377;{{ order.total }})</a>
-  <div class="muted" style="text-align:center;margin-top:6px">Pay karne ke baad shop paisa check karke "Paid" mark karega.</div>{% endif %}
-  <a class="btn b2" href="{% url 'bill_pdf' order.token %}">&#128196; Bill PDF download</a>
-  <a class="btn b3" href="{{ wa_link }}" target="_blank">&#128242; Shop ko WhatsApp karo</a>
-  <a class="btn b1" href="/">&larr; Home</a>
-  <div class="muted" style="text-align:center;margin-top:12px">Is page ka link save kar lo, ye aapka bill hai.</div>
+
+    <!-- Action Buttons -->
+
+    <div class="actions">
+
+        {% if upi_link and not order.paid %}
+
+            <a class="btn b4" href="{{ upi_link }}">
+
+                📱 Pay ₹{{ order.total }} Using UPI
+
+            </a>
+
+            <div class="footer">
+                Payment will be confirmed after the shop verifies it.
+            </div>
+
+        {% endif %}
+
+        <a class="btn b2"
+           href="{% url 'bill_pdf' order.token %}">
+
+            📄 Download Invoice PDF
+
+        </a>
+
+        <a class="btn b3"
+           href="{{ wa_link }}"
+           target="_blank"
+           rel="noopener noreferrer">
+
+            💬 Contact Shop on WhatsApp
+
+        </a>
+
+        <button class="btn b1" onclick="window.print()">
+
+            🖨️ Print Invoice
+
+        </button>
+
+        <a class="btn b1" href="/">
+
+            ← Back to Home
+
+        </a>
+
+    </div>
+
+    <div class="footer">
+
+        Thank you for choosing {{ shop.name }}.<br>
+
+        Please keep this invoice for future reference.<br>
+
+        We look forward to serving you again!
+
+    </div>
+
 </div>
+
 </body>
 </html>
+
