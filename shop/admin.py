@@ -92,3 +92,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ("status", "payment_method", "paid")
     search_fields = ("first_name", "last_name", "phone")
     inlines = [OrderItemInline]    
+
+admin.site.site_header = "Shree Krishan Uniform"
+admin.site.site_title = "Owner Panel"
+admin.site.index_title = "Shop Management"    

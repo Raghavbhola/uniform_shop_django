@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.cache import cache
 from django.db import transaction
-from django.db.models import F, Sum
+from django.db.models import F, Sum, Count, Max
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -502,3 +502,15 @@ def orders(request):
 
     return render(request, "shop/orders.html", {
         "orders": Order.objects.prefetch_related("lines")[:100]})
+
+
+@staff_member_required
+def customers(request):
+    q = request.GET.get("q", "").strip()
+    qs = Customer.objects.annotate(
+        visits=Count("purchase"), last_visit=Max("purchase__created_at")
+    ).order_by("-points")
+    if q.isdigit():
+        qs = qs.filter(phone__contains=q)
+    return render(request, "shop/customers.html", {
+        "customers": qs[:200], "q": q, "total": Customer.objects.count()})

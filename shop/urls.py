@@ -15,4 +15,5 @@ urlpatterns = [
     path('bill/<uuid:token>/pdf/', views.bill_pdf, name='bill_pdf'),
     path('orders/', views.orders, name='orders'),    
     path('dashboard/', views.dashboard, name='dashboard'), 
+    path('customers/', views.customers, name='customers'),    
 ]

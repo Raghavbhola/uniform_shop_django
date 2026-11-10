@@ -15,7 +15,7 @@
     body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;background:#f4f8ff;color:var(--ink);line-height:1.5}
     button,input{font:inherit}
     .topbar{background:linear-gradient(115deg,#061d49,#1458b8);color:#fff;box-shadow:0 5px 22px #08275f20}
-    .nav{max-width:1050px;margin:auto;min-height:76px;padding:12px 20px;display:flex;align-items:center;gap:15px}
+    .nav{width:100%;max-width:none;margin:0;min-height:76px;padding:12px 25px;display:flex;align-items:center;gap:15px}
     .back,.schools{color:#fff;text-decoration:none;background:#ffffff1c;border:1px solid #ffffff2b;padding:9px 14px;border-radius:999px;font-size:.88rem;font-weight:750;white-space:nowrap;transition:.2s}
     .back:hover,.schools:hover{background:#ffffff30;transform:translateY(-2px)}
     .brand{display:flex;align-items:center;gap:10px;font-size:1.05rem;font-weight:900;line-height:1.1}
@@ -79,8 +79,8 @@
     .footer{text-align:center;color:#8996aa;font-size:.78rem;padding:10px 0 25px}
     .footer strong{color:var(--navy)}
     @media(max-width:540px){
-      .nav{min-height:68px;padding:10px 13px;gap:9px}
-      .brand{font-size:.88rem;gap:7px}
+      .nav{display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:8px;padding:10px 13px}.back,.schools,.nav>a:last-child{flex-shrink:0;white-space:nowrap}
+      .brand{flex:1;min-width:0;margin:0;font-size:.88rem;gap:7px}      
       .brand-icon{width:37px;height:37px;font-size:1.25rem}
       .back,.schools{font-size:.77rem;padding:8px 10px}
       .wrap{margin-top:23px}
@@ -94,7 +94,7 @@
 <body>
   <header class="topbar">
     <div class="nav">
-      <a class="back" href="/dashboard/">← Home</a>
+      <a class="back" href="/dashboard/">← Dashboard</a>
       <div class="brand"><span class="brand-icon">👕</span><span>Shree Krishan Uniform<small>Staff Purchase Panel</small></span></div>
       <a class="schools" href="/manage/">⚙️ Schools</a>
       <a href="/orders/" style="color: white; font-weight: bold; text-decoration: none;">📦 Orders</a>

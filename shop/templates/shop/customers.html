@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Customers | Shree Krishan Uniform</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b}
+    .topbar{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:14px}
+    .topbar a{color:#fff;text-decoration:none;background:rgba(255,255,255,.18);padding:7px 14px;border-radius:20px;font-size:14px}
+    .topbar h1{margin:0;font-size:18px}
+    .wrap{max-width:680px;margin:16px auto;padding:0 14px 40px}
+    .search{display:flex;gap:8px;margin-bottom:12px}
+    .search input{flex:1;min-width:0;padding:13px;font-size:16px;border:1.5px solid #cbd5e1;border-radius:10px;outline:none}
+    .search input:focus{border-color:#2563eb}
+    .search button{padding:0 18px;border:0;border-radius:10px;background:#2563eb;color:#fff;font-weight:700;font-size:15px;cursor:pointer}
+    .count{font-size:13px;color:#64748b;margin:0 2px 10px}
+    .card{background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 10px rgba(15,23,42,.08);display:flex;align-items:center;gap:12px}
+    .info{flex:1;min-width:0}
+    .phone{font-weight:800;font-size:16px;color:#1e3a8a}
+    .meta{font-size:12.5px;color:#64748b;margin-top:3px}
+    .pts{text-align:center;background:#eff6ff;border-radius:10px;padding:6px 12px;min-width:68px}
+    .pts b{display:block;font-size:18px;color:#1d4ed8}
+    .pts span{font-size:11px;color:#64748b}
+    .hist{text-decoration:none;background:#2563eb;color:#fff;padding:9px 13px;border-radius:9px;font-size:13px;font-weight:700;white-space:nowrap}
+    .empty{background:#fff;border-radius:14px;padding:26px;text-align:center;color:#94a3b8}
+    @media(max-width:480px){.card{flex-wrap:wrap}.hist{width:100%;text-align:center}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="/dashboard/">&larr; Dashboard</a>
+    <h1>Customers</h1>
+  </div>
+
+  <div class="wrap">
+    <form class="search" method="get">
+      <input name="q" value="{{ q }}" inputmode="numeric" placeholder="&#128269; Number likho (jaise 95676)">
+      <button>Search</button>
+    </form>
+    <div class="count">
+      {% if q %}"{{ q }}" ke {{ customers|length }} result | {% endif %}Kul customers: {{ total }}
+    </div>
+
+    {% for c in customers %}
+    <div class="card">
+      <div class="info">
+        <div class="phone">&#128222; {{ c.phone }}</div>
+        <div class="meta">
+          {{ c.visits }} visit{{ c.visits|pluralize }}
+          {% if c.last_visit %}| Aakhri: {{ c.last_visit|date:"d M Y" }}{% else %}| Abhi koi purchase nahi{% endif %}
+          | Judey: {{ c.created_at|date:"d M Y" }}
+        </div>
+      </div>
+      <div class="pts"><b>{{ c.points }}</b><span>points</span></div>
+      <a class="hist" href="{% url 'history' c.phone %}">History &rarr;</a>
+    </div>
+    {% empty %}
+    <div class="empty">Koi customer nahi mila.</div>
+    {% endfor %}
+  </div>
+</body>
+</html>
