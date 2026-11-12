@@ -3,6 +3,7 @@ import uuid
 # Create your models here.
 class Customer(models.Model):
     phone = models.CharField(max_length=10, unique=True)
+    email = models.EmailField(blank=True)
     points = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -106,3 +107,20 @@ class OrderItem(models.Model):
     @property
     def line_total(self):
         return self.price * self.quantity    
+
+
+class Notification(models.Model):
+    TYPES = [('order', 'New Order'), ('customer', 'New Customer'),
+             ('payment', 'Payment Update'), ('purchase', 'New Purchase')]
+    notification_type = models.CharField(max_length=20, choices=TYPES)
+    title = models.CharField(max_length=150)
+    message = models.CharField(max_length=300)
+    link = models.CharField(max_length=300, blank=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title

@@ -1,50 +1,308 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Owner Dashboard | Shree Krishan Uniform</title>
-  <style>
-    *{box-sizing:border-box}
-    body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b}
-    .topbar{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
-    .topbar h1{margin:0;font-size:18px}
-    .topbar a{color:#fff;text-decoration:none;background:rgba(255,255,255,.18);padding:7px 14px;border-radius:20px;font-size:14px}
-    .wrap{max-width:640px;margin:18px auto;padding:0 14px 40px}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-    .stat{background:#fff;border-radius:14px;padding:14px 8px;text-align:center;box-shadow:0 2px 10px rgba(15,23,42,.08)}
-    .stat b{display:block;font-size:22px;color:#1e3a8a}
-    .stat span{font-size:12px;color:#64748b}
-    .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .tile{background:#fff;border-radius:16px;padding:22px 12px;text-align:center;text-decoration:none;color:#1e293b;box-shadow:0 2px 10px rgba(15,23,42,.08);font-weight:700}
-    .tile:hover{transform:translateY(-3px)}
-    .tile .ic{display:block;font-size:34px;margin-bottom:8px}
-    .tile small{display:block;font-weight:400;color:#64748b;margin-top:3px;font-size:12px}
-    .note{margin-top:18px;font-size:12px;color:#94a3b8;text-align:center}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Owner Dashboard | Shree Krishan Uniform</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:#eef3ff;color:#172033}
+.layout{display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:180px;background:#08275f;color:#fff;padding:28px 10px;flex-shrink:0}
+.logo{text-align:center;font-size:20px;font-weight:bold;margin-bottom:45px}
+.menu a,.menu button{display:block;width:100%;text-align:left;color:#cbd5e1;text-decoration:none;padding:14px 16px;border-radius:14px;margin:8px 0;background:none;border:0;font:inherit;cursor:pointer}
+.menu a:hover,.menu button:hover,.menu .active{background:#155eef;color:#fff}
+.menu form{margin:0}
+
+/* Main */
+.main{flex:1;padding:25px 35px;min-width:0}
+.top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:20px}
+.notification{position:relative;z-index:50}
+#notifyBtn{position:relative;border:0;background:#fff;width:48px;height:48px;border-radius:50%;font-size:22px;cursor:pointer;box-shadow:0 3px 12px #00000012}
+#notifyBadge{position:absolute;top:-4px;right:-4px;background:#e11d48;color:#fff;border-radius:99px;padding:2px 6px;font-size:11px;font-weight:700;min-width:18px;display:none}
+.notify-box{display:none;position:absolute;right:0;top:58px;width:340px;max-width:90vw;max-height:70vh;overflow-y:auto;background:#fff;padding:15px;border-radius:12px;box-shadow:0 4px 20px #0003}
+.notify-box.open{display:block}
+.notify-box h3{margin:0 0 10px}
+.notify-box h4{margin:14px 0 6px;font-size:14px;color:#08275f}
+.notify-box .none{font-size:13px;color:#94a3b8;margin:4px 0 8px}
+.notification-item{display:block;padding:11px 12px;margin:7px 0;background:#f1f5ff;border-radius:10px;color:#172033;text-decoration:none}
+.notification-item:hover{background:#e3ecff}
+.notification-item b{display:block}
+.notification-item p{margin:3px 0;font-size:13px;color:#475569}
+.notification-item small{color:#94a3b8}
+.notification-item span{display:block;margin-top:5px;color:#155eef;font-weight:600;font-size:13px}
+
+.notification-item.unread{background:#dbe8ff;border-left:4px solid #155eef}
+.markall{float:right;border:0;background:none;color:#155eef;font-weight:600;font-size:12px;cursor:pointer;margin-top:3px}
+h1{font-size:34px;margin:0 0 5px}
+.subtitle{color:#64748b;margin-bottom:25px}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:25px}
+.stat{background:#fff;padding:22px;border-radius:17px;box-shadow:0 3px 12px #0000000b}
+.stat b{font-size:27px;display:block;margin-bottom:5px}
+.stat span{color:#64748b}
+
+/* Tiles */
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%;max-width:none}
+.tile{background:#fff;padding:22px;border-radius:17px;text-decoration:none;color:#172033;box-shadow:0 3px 12px #0000000b;display:flex;align-items:center;gap:17px;transition:.2s}
+.tile:hover{transform:translateY(-3px);box-shadow:0 6px 18px #00000015}
+.ic{font-size:35px;background:#e8f1ff;padding:15px;border-radius:50%;flex-shrink:0}
+.tile b{font-size:17px}
+.tile small{display:block;color:#64748b;margin-top:5px}
+.note{margin-top:35px;color:#64748b;font-size:12px}
+ .stats .stat{border:1px solid #e1e9f5;animation:dash-rise .55s both;transition:transform .22s,box-shadow .22s}
+.stats .stat:nth-child(2){animation-delay:.08s}.stats .stat:nth-child(3){animation-delay:.16s}
+.stats .stat:hover{transform:translateY(-5px);box-shadow:0 14px 28px #08275f18}
+.day-summary{display:inline-flex;align-items:center;gap:8px;margin:-7px 0 22px;padding:10px 14px;border:1px solid #e1e9f5;border-radius:999px;background:#ffffffb8;color:#64748b;font-size:13px}
+.day-summary strong{color:#1557b7;font-variant-numeric:tabular-nums}
+@keyframes dash-rise{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+.tile{border:1px solid #e8edf5;transition:transform .22s,box-shadow .22s,border-color .22s;animation:dash-rise .5s both}
+.tile:hover{border-color:#a9c5ef;box-shadow:0 16px 34px #08275f1a;transform:translateY(-5px) scale(1.01)}
+.tile:nth-child(2){animation-delay:.05s}.tile:nth-child(3){animation-delay:.1s}.tile:nth-child(4){animation-delay:.15s}.tile:nth-child(5){animation-delay:.2s}.tile:nth-child(6){animation-delay:.25s}
+
+@media(max-width:1000px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.main{padding:22px 20px}.sidebar{width:165px}}
+@media(max-width:650px){
+  .layout{display:block}
+  .sidebar{width:100%;padding:12px}
+  .logo{margin:0 0 10px}
+  .menu{display:flex;overflow-x:auto;gap:5px}
+  .menu a,.menu button{white-space:nowrap;padding:10px;font-size:13px;margin:0;width:auto}
+  .main{padding:18px 13px}
+  h1{font-size:25px}
+  .subtitle{font-size:13px}
+  .stats{gap:8px}
+  .stat{padding:13px 7px}
+  .stat b{font-size:18px}
+  .stat span{font-size:11px}
+  .tiles{grid-template-columns:1fr;gap:9px}
+  .tile{padding:13px 8px;gap:8px}
+  .ic{font-size:24px;padding:10px}
+  .tile b{font-size:14px}
+  .tile small{font-size:10px}
+}
+.sidebar{position:fixed;inset:0 auto 0 0;z-index:101;width:min(290px,86vw);height:100dvh;overflow:auto;box-shadow:16px 0 44px #071a3540;transform:translateX(-105%);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+body.sidebar-open .sidebar{transform:translateX(0)}
+.sidebar-overlay{position:fixed;inset:0;z-index:100;background:#0b1738a6;backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+body.sidebar-open .sidebar-overlay{opacity:1;visibility:visible}
+.sidebar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;padding:0 5px}
+.sidebar-head .logo{margin:0;text-align:left;font-size:18px;line-height:1.25}
+.sidebar-close{width:38px;height:38px;border:1px solid #ffffff2b;border-radius:12px;background:#ffffff12;color:#fff;font-size:22px;cursor:pointer}
+.top{justify-content:space-between!important;align-items:center;gap:15px}
+.top-actions{display:flex;align-items:center;gap:12px}
+.top-actions{margin-left:auto}
+.menu-toggle{display:grid;gap:5px;width:48px;height:48px;place-content:center;border:1px solid #e1e8f2;border-radius:15px;background:#fff;cursor:pointer;box-shadow:0 5px 16px #0a28500d;transition:transform .2s,box-shadow .2s}
+.menu-toggle:hover{transform:translateY(-2px);box-shadow:0 10px 24px #0a285020}
+.menu-toggle span{width:19px;height:2px;border-radius:2px;background:#12366c;transition:transform .2s,opacity .2s}
+body.sidebar-open .menu-toggle span:first-child{transform:translateY(7px) rotate(45deg)}
+body.sidebar-open .menu-toggle span:nth-child(2){opacity:0}
+body.sidebar-open .menu-toggle span:last-child{transform:translateY(-7px) rotate(-45deg)}
+@media(max-width:650px){.sidebar{width:min(310px,88vw);height:100vh;height:100dvh}.main{padding-top:20px}}
+@media(prefers-reduced-motion:reduce){.sidebar,.sidebar-overlay,.menu-toggle,.menu-toggle span{transition:none!important}}
+</style>
 </head>
 <body>
-  <div class="topbar">
-    <h1>Owner Dashboard</h1>
-    <a href="{% url 'admin:logout' %}" onclick="event.preventDefault();document.getElementById('lo').submit()">Logout</a>
-    <form id="lo" method="post" action="{% url 'admin:logout' %}" style="display:none">{% csrf_token %}</form>
+<div class="layout">
+
+<aside class="sidebar" id="adminSidebar" role="dialog" aria-modal="true" aria-label="Admin Panel navigation">
+  <div class="sidebar-head">
+    <div class="logo">✨<br>Admin Panel</div>
+    <button class="sidebar-close" id="sidebarClose" type="button" aria-label="Close admin panel">×</button>
   </div>
-  <div class="wrap">
-    <div class="stats">
-      <div class="stat"><b>{{ new_orders }}</b><span>Naye orders</span></div>
-      <div class="stat"><b>&#8377;{{ today_sales|floatformat:0 }}</b><span>Aaj ki bikri</span></div>
-      <div class="stat"><b>{{ customers }}</b><span>Customers</span></div>
+  <nav class="menu">
+    <a class="active" href="/dashboard/">🏠 Dashboard</a>
+    <a href="/orders/">📦 Orders</a>
+    <a href="/customers/">👥 Customers</a>
+    <a href="/manage/">🛍️ Products</a>
+    <a href="/admin/">⚙️ Settings</a>
+    <form method="post" action="{% url 'admin:logout' %}">{% csrf_token %}
+      <button type="submit">🚪 Logout</button>
+    </form>
+  </nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+<main class="main">
+  <div class="top">
+    <button class="menu-toggle" id="sidebarToggle" type="button" aria-label="Open admin panel" aria-expanded="false" aria-controls="adminSidebar"><span></span><span></span><span></span></button>
+    <div class="top-actions">
+    <div class="notification">
+      <button id="notifyBtn" type="button" aria-label="Notifications" aria-expanded="false">🔔<span id="notifyBadge"></span></button>
+      <div id="notifyBox" class="notify-box">
+        <button type="button" class="markall" id="markAll">Mark all as read</button>
+        <h3>🔔 Notifications</h3>
+        <div id="notificationContent">Loading notifications...</div>
+      </div>
     </div>
-    <div class="tiles">
-      <a class="tile" href="/staff/"><span class="ic">&#10133;</span>Add Purchase<small>Counter par bikri</small></a>
-      <a class="tile" href="/orders/"><span class="ic">&#128230;</span>Orders<small>Online orders aur bill</small></a>
-      <a class="tile" href="/manage/"><span class="ic">&#127979;</span>Schools &amp; Dress<small>Naya school, photo, price</small></a>
-      <a class="tile" href="/customers/"><span class="ic">&#128101;</span>Customers<small>Numbers aur points</small></a>
-      <a class="tile" href="/admin/"><span class="ic">&#9881;&#65039;</span>Admin Panel<small>Poora data</small></a>
-      <a class="tile" href="/"><span class="ic">&#127968;</span>Website<small>Customer ko jo dikhta hai</small></a>
     </div>
-    <div class="note">Ye page sirf owner ke liye hai. Customers ko iska link mat dena.</div>
   </div>
+
+  <h1>Welcome Back! 👋</h1>
+  <div class="subtitle">A live snapshot of your shop, orders and customer activity.</div>
+
+  <div class="stats">
+    <div class="stat"><b>📦 {{ new_orders }}</b><span>New Orders</span></div>
+    <div class="stat"><b>₹{{ today_sales|floatformat:0 }}</b><span>Today's Sales · counter + paid online</span></div>
+    <div class="stat"><b>👥 {{ customers }}</b><span>Customers</span></div>
+  </div>
+
+  <div class="day-summary">Today: <strong>{{ today_orders }}</strong> online orders <span>·</span> <strong>{{ today_purchases }}</strong> counter purchases</div>
+
+  <div class="tiles">
+    <a class="tile" href="/staff/"><span class="ic">🛍️</span><div><b>Add Purchase</b><small>Counter Sales</small></div></a>
+    <a class="tile" href="/orders/"><span class="ic">📦</span><div><b>Orders</b><small>Online Orders &amp; Bills</small></div></a>
+    <a class="tile" href="/manage/"><span class="ic">🏫</span><div><b>Schools &amp; Dress</b><small>Add New School, Photo &amp; Price</small></div></a>
+    <a class="tile" href="/customers/"><span class="ic">👥</span><div><b>Customers</b><small>Numbers &amp; Points</small></div></a>
+    <a class="tile" href="/admin/"><span class="ic">⚙️</span><div><b>Admin Panel</b><small>Complete Data</small></div></a>
+    <a class="tile" href="/"><span class="ic">🏠</span><div><b>Website</b><small>Customer View</small></div></a>
+  </div>
+
+  <div class="note">🔒 Owner Only — Do not share this page with customers.</div>
+</main>
+</div>
+
+<script>
+(() => {
+  const menuButton = document.getElementById('sidebarToggle');
+  const closeButton = document.getElementById('sidebarClose');
+  const overlay = document.getElementById('sidebarOverlay');
+  const sidebar = document.getElementById('adminSidebar');
+  sidebar.inert = true;
+  sidebar.setAttribute('aria-hidden', 'true');
+  const setSidebar = open => {
+    document.body.classList.toggle('sidebar-open', open);
+    menuButton.setAttribute('aria-expanded', String(open));
+    menuButton.setAttribute('aria-label', open ? 'Close admin panel' : 'Open admin panel');
+    sidebar.inert = !open;
+    sidebar.setAttribute('aria-hidden', String(!open));
+    overlay.setAttribute('aria-hidden', String(!open));
+    if (open) closeButton.focus();
+    else menuButton.focus();
+  };
+  menuButton.addEventListener('click', () => setSidebar(!document.body.classList.contains('sidebar-open')));
+  closeButton.addEventListener('click', () => setSidebar(false));
+  overlay.addEventListener('click', () => setSidebar(false));
+  document.addEventListener('keydown', e => {
+    if (!document.body.classList.contains('sidebar-open')) return;
+    if (e.key === 'Escape') { setSidebar(false); return; }
+    if (e.key === 'Tab') {
+      const focusables = [...sidebar.querySelectorAll('a[href],button:not([disabled])')];
+      const first = focusables[0], last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  document.querySelectorAll('.sidebar .menu a').forEach(link => link.addEventListener('click', () => setSidebar(false)));
+
+  const btn = document.getElementById('notifyBtn');
+  const box = document.getElementById('notifyBox');
+  const content = document.getElementById('notificationContent');
+  const badge = document.getElementById('notifyBadge');
+  const URL_NOTIFY = "{% url 'notifications' %}";
+  const STORE = 'sku_seen_notifications';
+
+  // Padhe hue (seen) notifications is browser mein yaad rakhte hain
+  let seen = new Set();
+  try { seen = new Set(JSON.parse(localStorage.getItem(STORE) || '[]')); } catch (e) {}
+  function saveSeen() {
+    try { localStorage.setItem(STORE, JSON.stringify([...seen].slice(-500))); } catch (e) {}
+  }
+
+  const esc = v => String(v ?? '').replace(/[&<>"']/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const safeLink = u => (typeof u === 'string' && u.startsWith('/') && !u.startsWith('//')) ? u : '#';
+  const list = v => Array.isArray(v) ? v : [];
+
+  // Ek hi order/customer kisi bhi list mein ho, uski id ek hi rahegi
+  const idOf = i => [i.bill_no || i.phone || i.title || i.link || '', i.status || '', i.created_at || ''].join('|');
+
+  const asCustomer = i => [i.phone, 'Registered: ' + (i.created_at || '')];
+  const asOrder = i => [(i.bill_no || '') + ' - ' + (i.customer || ''),
+                        '₹' + (i.amount ?? '') + ' | ' + (i.payment || '') + ' | ' + (i.status || '')];
+  const asEvent = i => [i.title, i.message];
+
+  function section(title, items, fmt, countable) {
+    let html = '<h4>' + title + ' (' + items.length + ')</h4>';
+    if (!items.length) return html + '<div class="none">No records found.</div>';
+    items.forEach(i => {
+      const [name, detail] = fmt(i);
+      const id = idOf(i);
+      const unread = countable && !seen.has(id);
+      html += '<a class="notification-item' + (unread ? ' unread' : '') + '" data-id="' + esc(id) +
+        '" href="' + esc(safeLink(i.link)) + '">' +
+        '<b>' + esc(name) + '</b><p>' + esc(detail) + '</p>' +
+        (i.created_at && fmt !== asCustomer ? '<small>' + esc(i.created_at) + '</small>' : '') +
+        '<span>View Details →</span></a>';
+    });
+    return html;
+  }
+
+  let last = null;
+  function render() {
+    if (!last) return;
+    const nc = list(last.new_customers), no = list(last.new_orders),
+          pp = list(last.pending_payments), uc = list(last.unpaid_bills), ev = list(last.events);
+
+    content.innerHTML =
+      section('🆕 New Customers', nc, asCustomer, true) +
+      section('📦 New Orders', no, asOrder, true) +
+      section('💰 Pending UPI', pp, asOrder, true) +
+      section('⚠️ Unpaid COD', uc, asOrder, true) +
+      section('🔔 Recent Activity', ev, asEvent, false);
+
+    // Bell ka number = sirf naye (na dekhe hue) notifications, har ek sirf ek baar
+    const unseen = new Set();
+    [...nc, ...no, ...pp, ...uc].forEach(i => { const id = idOf(i); if (!seen.has(id)) unseen.add(id); });
+    badge.textContent = unseen.size > 99 ? '99+' : unseen.size;
+    badge.style.display = unseen.size ? 'block' : 'none';
+  }
+
+  async function loadNotifications() {
+    if (document.hidden) return;
+    try {
+      const res = await fetch(URL_NOTIFY, {headers: {'Accept': 'application/json'}});
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      last = await res.json();
+      render();
+    } catch (e) {
+      content.textContent = 'Notifications could not load.';
+      console.error(e);
+    }
+  }
+
+  // Kisi notification par click = wo "seen" ho gayi (page khulne se pehle save hoti hai)
+  content.addEventListener('click', e => {
+    const a = e.target.closest('.notification-item');
+    if (a && a.dataset.id) { seen.add(a.dataset.id); saveSeen(); }
+  });
+
+  document.getElementById('markAll').addEventListener('click', () => {
+    if (!last) return;
+    [...list(last.new_customers), ...list(last.new_orders),
+     ...list(last.pending_payments), ...list(last.unpaid_bills)].forEach(i => seen.add(idOf(i)));
+    saveSeen();
+    render();
+  });
+
+  btn.addEventListener('click', () => {
+    const open = box.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+    if (open) loadNotifications();
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.notification')) box.classList.remove('open');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') box.classList.remove('open');
+  });
+
+  loadNotifications();
+  setInterval(loadNotifications, 15000);
+})();
+</script>
 </body>
 </html>

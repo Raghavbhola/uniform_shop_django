@@ -1,5 +1,8 @@
 import json
 import os
+import secrets
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 from decimal import Decimal, InvalidOperation
 from io import BytesIO
 from urllib.parse import quote
@@ -11,6 +14,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.cache import cache
+from django.core.mail import send_mail
 from django.db import transaction
 from django.db.models import F, Sum, Count, Max
 from django.http import HttpResponse, JsonResponse
@@ -22,7 +26,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
-from .models import Customer, Order, OrderItem, Product, Purchase, School
+from .models import Customer, Order, OrderItem, Product, Purchase, School, Notification
 
 ALLOWED_ITEMS = ["Shirt", "Dress", "Trouser", "Tie", "Belt", "Shoes",
                  "Socks", "School Bag", "Tiffin", "Bottle", "Other"]
@@ -160,14 +164,94 @@ def register(request):
                              "message": "Bahut zyada koshish hui, thodi der baad try karo."},
                             status=429)
     phone = request.POST.get("phone", "").strip()
-    if not (phone.isdigit() and len(phone) == 10):
-        return JsonResponse({"success": False, "message": "Phone number galat hai!"})
-    customer, created = Customer.objects.get_or_create(phone=phone)
+    if not (phone.isdigit() and len(phone) == 10 and phone[0] in "6789"):
+        return JsonResponse({"success": False, "message": "Enter a valid 10-digit mobile number."})
+
+    channel = request.POST.get("channel", "whatsapp")
+    customer = Customer.objects.filter(phone=phone).first()
+    if channel == "whatsapp":
+        destination = phone
+    elif channel == "email":
+        destination = request.POST.get("email", "").strip().lower()
+        try:
+            validate_email(destination)
+        except ValidationError:
+            return JsonResponse({"success": False, "message": "Enter a valid email address."})
+        if customer and customer.email.lower() != destination:
+            return JsonResponse({"success": False, "message": "This email is not linked to your account. Use WhatsApp OTP."})
+    else:
+        return JsonResponse({"success": False, "message": "Choose WhatsApp or email for your OTP."})
+
+    request.session.pop("verified_customer_id", None)
+    cache.delete(f"customer_otp:{phone}")
+    otp = f"{secrets.randbelow(10000):04d}"
+    delivered = False
+    if channel == "email":
+        try:
+            delivered = send_mail(
+                "Your Shree Krishan Uniform OTP",
+                f"Your 4-digit verification code is {otp}. It expires in 5 minutes.",
+                settings.DEFAULT_FROM_EMAIL, [destination], fail_silently=False,
+            ) > 0
+        except Exception:
+            delivered = False
+    else:
+        token, phone_id = os.environ.get("WA_TOKEN"), os.environ.get("WA_PHONE_ID")
+        if token and phone_id:
+            payload = {
+                "messaging_product": "whatsapp", "to": f"91{phone}", "type": "template",
+                "template": {
+                    "name": os.environ.get("WA_OTP_TEMPLATE", "customer_otp"),
+                    "language": {"code": os.environ.get("WA_OTP_LANGUAGE", "en")},
+                    "components": [{"type": "body", "parameters": [{"type": "text", "text": otp}]}],
+                },
+            }
+            try:
+                response = requests.post(
+                    f"https://graph.facebook.com/v21.0/{phone_id}/messages", json=payload,
+                    headers={"Authorization": f"Bearer {token}"}, timeout=8,
+                )
+                delivered = response.ok
+            except requests.RequestException:
+                delivered = False
+    if not delivered:
+        return JsonResponse({"success": False, "message": "OTP could not be sent. Please contact the shop."}, status=503)
+    cache.set(f"customer_otp:{phone}", {"code": otp, "channel": channel, "destination": destination}, 300)
+    return JsonResponse({"success": True, "message": "OTP sent. Enter your 4-digit OTP below."})
+
+
+def verify_customer_otp(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "message": "Invalid request."}, status=405)
+    phone = request.POST.get("phone", "").strip()
+    otp = request.POST.get("otp", "").strip()
+    if too_many(request, "verify_otp", 12, 600):
+        return JsonResponse({"success": False, "message": "Too many attempts. Please try again later."}, status=429)
+    if not (phone.isdigit() and len(phone) == 10 and phone[0] in "6789" and otp.isdigit() and len(otp) == 4):
+        return JsonResponse({"success": False, "message": "Enter your 4-digit OTP."})
+    key = f"customer_otp:{phone}"
+    challenge = cache.get(key)
+    if not challenge or not secrets.compare_digest(challenge["code"], otp):
+        return JsonResponse({"success": False, "message": "OTP is incorrect or expired. Please request a new one."})
+    customer = Customer.objects.filter(phone=phone).first()
+    if customer and challenge["channel"] == "email" and customer.email.lower() != challenge["destination"]:
+        cache.delete(key)
+        return JsonResponse({"success": False, "message": "Email does not match this account. Use WhatsApp OTP."})
+    cache.delete(key)
+    created = customer is None
+    if created:
+        customer = Customer.objects.create(
+            phone=phone,
+            email=challenge["destination"] if challenge["channel"] == "email" else "",
+        )
+        Notification.objects.create(
+            notification_type="customer", title="New Customer Registered",
+            message=f"Customer {phone} registered.", link="/customers/?q=" + phone,
+        )
+    request.session["verified_customer_id"] = customer.pk
     return JsonResponse({
-        "success": True,
-        "points": customer.points,
-        "message": "Register ho gaye!" if created else "Welcome back!",
-        "new": created,
+        "success": True, "points": customer.points,
+        "message": "Registration complete." if created else "Welcome back!",
     })
 
 
@@ -235,6 +319,11 @@ def place_order(request):
                       school=p.school.name if p.school else "All schools",
                       class_group=p.class_group, size=size, quantity=qty, price=p.price)
             for p, size, qty in lines])
+        Notification.objects.create(
+            notification_type="order", title=f"New Order: {order.bill_no}",
+            message=f"{order.full_name} placed an order of ₹{order.total}.",
+            link=reverse("bill", args=[order.token]),
+        )
     return JsonResponse({"success": True, "bill_url": reverse("bill", args=[order.token])})
 
 
@@ -297,11 +386,14 @@ def bill_pdf(request, token):
 @staff_member_required
 def dashboard(request):
     today = timezone.localdate()
+    counter_sales = Purchase.objects.filter(created_at__date=today).aggregate(t=Sum("amount"))["t"] or 0
+    online_sales = Order.objects.filter(created_at__date=today, paid=True).exclude(status="cancelled").aggregate(t=Sum("total"))["t"] or 0
     return render(request, "shop/dashboard.html", {
         "customers": Customer.objects.count(),
         "new_orders": Order.objects.filter(status="new").count(),
-        "today_sales": Purchase.objects.filter(created_at__date=today)
-                                       .aggregate(t=Sum("amount"))["t"] or 0,
+        "today_sales": counter_sales + online_sales,
+        "today_orders": Order.objects.filter(created_at__date=today).exclude(status="cancelled").count(),
+        "today_purchases": Purchase.objects.filter(created_at__date=today).count(),
     })
 
 
@@ -340,6 +432,11 @@ def add_purchase(request):
     items_text = ", ".join(chosen)
 
     pts = award_points(customer, amount, items_text)
+    Notification.objects.create(
+        notification_type="purchase", title="New Counter Purchase",
+        message=f"{customer.phone} made a purchase of ₹{money(amount)}.",
+        link=reverse("history", args=[customer.phone]),
+    )
     remaining = max(POINTS_GOAL - customer.points, 0)
 
     lines = [
@@ -514,3 +611,29 @@ def customers(request):
         qs = qs.filter(phone__contains=q)
     return render(request, "shop/customers.html", {
         "customers": qs[:200], "q": q, "total": Customer.objects.count()})
+
+@staff_member_required
+def notifications(request):
+    today = timezone.localdate()
+    fmt = lambda value: timezone.localtime(value).strftime("%d-%m-%Y %I:%M %p")
+    customer_rows = Customer.objects.filter(created_at__date=today).order_by("-created_at")[:8]
+    order_rows = Order.objects.exclude(status="cancelled").order_by("-created_at")[:8]
+
+    def pack_order(order):
+        return {
+            "bill_no": order.bill_no, "customer": order.full_name,
+            "amount": str(order.total), "payment": order.get_payment_method_display(),
+            "status": order.get_status_display(), "created_at": fmt(order.created_at),
+            "link": reverse("bill", args=[order.token]),
+        }
+
+    events = Notification.objects.all()[:8]
+    return JsonResponse({
+        "new_customers": [{"phone": c.phone, "created_at": fmt(c.created_at),
+                           "link": "/customers/?q=" + c.phone} for c in customer_rows],
+        "new_orders": [pack_order(o) for o in order_rows if o.status == "new"],
+        "pending_payments": [pack_order(o) for o in order_rows if o.payment_method == "UPI" and not o.paid],
+        "unpaid_bills": [pack_order(o) for o in order_rows if o.payment_method == "COD" and not o.paid],
+        "events": [{"title": n.title, "message": n.message, "link": n.link,
+                    "created_at": fmt(n.created_at)} for n in events],
+    })

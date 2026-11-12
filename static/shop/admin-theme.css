@@ -1,0 +1,21 @@
+:root{--primary:#173b70;--primary-dark:#102a50;--ink:#17263d;--muted:#63738b;--line:#e5eaf1;--surface:#fff;--wash:#f4f7fb}
+body{background:var(--wash);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif}
+#header{background:linear-gradient(110deg,var(--primary-dark),#245a9d);box-shadow:0 5px 20px #102a5026;padding:15px 28px}
+#branding h1,#branding h1 a:link,#branding h1 a:visited{color:#fff;font-size:20px;font-weight:750;letter-spacing:-.3px}
+#branding h1 span{display:inline-block;margin-left:10px;padding:4px 9px;border:1px solid #ffffff55;border-radius:999px;color:#dceaff;font-size:11px;font-weight:600;letter-spacing:.3px;vertical-align:middle}
+#user-tools{color:#e2ecfb;font-size:12px}
+#user-tools a:link,#user-tools a:visited{color:#fff}
+.owner-dashboard-link{display:inline-flex;margin:12px 0 0 28px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--primary);font-weight:650;text-decoration:none;transition:.18s}
+.owner-dashboard-link:hover{background:#edf4ff;transform:translateY(-1px)}
+#content{padding:24px 28px 36px}
+#content h1{color:var(--ink);font-size:28px;font-weight:750;letter-spacing:-.7px}
+#content-main .module,#content-related .module{overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:0 8px 24px #1834520b}
+.module caption,.module h2,.module h3{background:#edf3fb;color:var(--primary);font-size:13px;font-weight:750;letter-spacing:.2px}
+.module th,.module td{border-color:var(--line);padding:12px 14px}
+.module tr:hover td,.module tr:hover th{background:#f7faff}
+a:link,a:visited{color:#245a9d}
+.addlink,.changelink{font-weight:650}
+div.breadcrumbs{background:transparent;color:var(--muted);padding:12px 28px}
+#footer{padding:18px 28px;color:var(--muted)}
+@media(max-width:767px){#header{padding:14px 16px}#content{padding:18px 14px}#content h1{font-size:23px}.owner-dashboard-link{margin-left:14px}.module th,.module td{padding:9px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}

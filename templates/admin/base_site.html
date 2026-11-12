@@ -1,0 +1,9 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Owner Panel | Uniform Shop{% endblock %}
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">Shree Krishan Uniform <span>Owner Panel</span></a></h1>
+{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static 'shop/css/admin-theme.css' %}">{% endblock %}
+{% block nav-global %}<a class="owner-dashboard-link" href="/dashboard/">← Back to Dashboard</a>{% endblock %}

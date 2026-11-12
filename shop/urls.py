@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('register/', views.register, name='register'),
+    path('verify-otp/', views.verify_customer_otp, name='verify_otp'),
     path('purchase/', views.add_purchase, name='purchase'),
     path('staff/', views.staff, name='staff'),
     path('search/', views.search_customers, name='search'),
@@ -15,5 +16,6 @@ urlpatterns = [
     path('bill/<uuid:token>/pdf/', views.bill_pdf, name='bill_pdf'),
     path('orders/', views.orders, name='orders'),    
     path('dashboard/', views.dashboard, name='dashboard'), 
-    path('customers/', views.customers, name='customers'),    
+    path('customers/', views.customers, name='customers'),  
+    path("notifications/", views.notifications, name="notifications"),  
 ]

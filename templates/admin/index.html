@@ -1,0 +1,21 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block content %}
+<section class="owner-welcome">
+  <div><p class="owner-eyebrow">OWNER WORKSPACE</p><h1>Shop Management</h1><p>Manage your shop data and daily operations from one place.</p></div>
+  <a class="owner-primary" href="/dashboard/">Open Dashboard <span>→</span></a>
+</section>
+<section class="owner-shortcuts" aria-label="Quick actions">
+  <a href="/orders/"><span>01</span><b>Online orders</b><small>Review orders and bills</small><i>↗</i></a>
+  <a href="/manage/"><span>02</span><b>Schools &amp; products</b><small>Update uniforms and prices</small><i>↗</i></a>
+  <a href="/customers/"><span>03</span><b>Customers</b><small>Look up customer points</small><i>↗</i></a>
+  <a href="/staff/"><span>04</span><b>Counter sales</b><small>Record a shop purchase</small><i>↗</i></a>
+</section>
+<div class="owner-data-heading"><div><p class="owner-eyebrow">RECORDS &amp; SETTINGS</p><h2>Complete Data</h2></div><p>Add, review, and update the records stored in your shop.</p></div>
+{% if app_list %}<div class="owner-app-grid">
+  {% for app in app_list %}<section class="owner-app-card">
+    <h3>{{ app.name }}</h3>
+    {% for model in app.models %}<div class="owner-model-row"><a class="owner-model-name" href="{{ model.admin_url }}">{{ model.name }}</a><div class="owner-model-actions">{% if model.add_url %}<a href="{{ model.add_url }}">Add</a>{% endif %}{% if model.admin_url %}<a href="{{ model.admin_url }}">View records</a>{% endif %}</div></div>{% endfor %}
+  </section>{% endfor %}
+</div>{% else %}<p>You do not have permission to manage records.</p>{% endif %}
+{% endblock %}

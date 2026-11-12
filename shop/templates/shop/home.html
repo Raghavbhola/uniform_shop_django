@@ -130,12 +130,24 @@
       </div>
       <div class="reg-card reveal">
         <h2>Welcome to Shree Krishan Uniform!</h2>
-        <p class="note">Enter your WhatsApp number to register or check your existing points.</p>
+        <p class="note">Choose WhatsApp or enter your email address. We’ll send a 4-digit OTP there to verify it’s you.</p>
         <div class="input-row">
           <span class="prefix">+91</span>
-          <input type="tel" id="phone" placeholder="98765 43210" maxlength="10" inputmode="numeric" autocomplete="tel-national" aria-label="10 digit mobile number">
+          <input type="tel" id="phone" placeholder="98765 43210" maxlength="10" inputmode="numeric" autocomplete="tel-national" aria-label="10 digit mobile number" pattern="[6-9][0-9]{9}">
+        </div>
+        <div class="otp-channel" id="otpChannel" role="group" aria-labelledby="otpChannelTitle">
+          <div class="otp-channel-title" id="otpChannelTitle">Send verification code by</div>
+          <label><input type="radio" name="otpChannel" value="whatsapp" checked> WhatsApp</label>
+          <label><input type="radio" name="otpChannel" value="email"> Email</label>
+        </div>
+        <input class="email-input" type="email" id="otpEmail" placeholder="Enter the email address where you want the OTP" autocomplete="email" aria-label="Email address for OTP delivery" hidden>
+        <div class="otp-entry" id="otpEntry" hidden>
+          <label for="otpCode">OTP sent — enter your 4-digit OTP</label>
+          <input type="text" id="otpCode" inputmode="numeric" maxlength="4" autocomplete="one-time-code" placeholder="••••" aria-label="4-digit OTP">
+          <button class="reg-btn" id="verifyBtn" type="button" onclick="verifyCustomerOtp()">Verify &amp; Continue →</button>
         </div>
         <button class="reg-btn" id="regBtn" onclick="registerCustomer()">Continue →</button>
+        <button class="change-number" id="changeNumber" type="button" hidden>Use another number</button>
         <div class="msg" id="msg" role="status" aria-live="polite"></div>
         <div class="result" id="result">
           <div class="big"><span id="ptsNum">0</span><small>Your total points</small></div>

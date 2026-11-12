@@ -505,7 +505,12 @@ th, td {
 
         <!-- Payment Note -->
 
-        {% if not order.paid %}
+        {% if request.user.is_staff %}
+        <div class="payment-note">
+            <b>Owner view</b><br>
+            Payment and order status are shown above. Manage this order from the owner dashboard.
+        </div>
+        {% elif not order.paid %}
 
         <div class="payment-note">
 
@@ -535,7 +540,7 @@ th, td {
 
     <div class="actions">
 
-        {% if upi_link and not order.paid %}
+        {% if upi_link and not order.paid and not request.user.is_staff %}
 
             <a class="btn b4" href="{{ upi_link }}">
 
@@ -556,14 +561,14 @@ th, td {
 
         </a>
 
-        <a class="btn b3"
+        {% if not request.user.is_staff %}<a class="btn b3"
            href="{{ wa_link }}"
            target="_blank"
            rel="noopener noreferrer">
 
-            💬 Contact Shop on WhatsApp
+            💬 Contact the Shop on WhatsApp
 
-        </a>
+        </a>{% endif %}
 
         <button class="btn b1" onclick="window.print()">
 
@@ -571,11 +576,11 @@ th, td {
 
         </button>
 
-        <a class="btn b1" href="/">
-
-            ← Back to Home
-
-        </a>
+        {% if request.user.is_staff %}
+            <a class="btn b1" href="{% url 'dashboard' %}">← Back to Dashboard</a>
+        {% else %}
+            <a class="btn b1" href="{% url 'home' %}">← Back to Home</a>
+        {% endif %}
 
     </div>
 

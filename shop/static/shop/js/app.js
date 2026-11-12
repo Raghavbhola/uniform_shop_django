@@ -96,34 +96,43 @@
     m.style.display = 'block';
     m.textContent = text;
   }
+  let otpPhone = '';
+  const otpEntry = document.getElementById('otpEntry');
+  const otpEmail = document.getElementById('otpEmail');
+  const otpChannel = document.getElementById('otpChannel');
+  otpChannel.addEventListener('change', () => {
+    otpEmail.hidden = document.querySelector('input[name="otpChannel"]:checked').value !== 'email';
+  });
   function registerCustomer() {
     const phone = document.getElementById('phone').value.trim();
     const btn = document.getElementById('regBtn');
     const result = document.getElementById('result');
-    if (!/^\d{10}$/.test(phone)) {
+    result.style.display = 'none';
+    if (!/^[6-9]\d{9}$/.test(phone)) {
       result.style.display = 'none';
-      showMsg('Please enter a valid 10-digit mobile number.', false);
+      showMsg('Enter a valid 10-digit mobile number.', false);
       return;
     }
+    const channel = document.querySelector('input[name="otpChannel"]:checked').value;
+    if (channel === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(otpEmail.value.trim())) {
+      showMsg('Enter a valid email address.', false);
+      return;
+    }
+    otpPhone = phone;
+    otpEntry.hidden = true;
     btn.disabled = true;
-    btn.textContent = 'Please wait...';
+    btn.textContent = 'Sending OTP...';
     fetch('/register/', {
       method: 'POST',
       headers: {'Content-Type':'application/x-www-form-urlencoded','X-CSRFToken':csrfToken()},
-      body: 'phone=' + encodeURIComponent(phone)
+      body: new URLSearchParams({phone, channel, email: otpEmail.value.trim()})
     })
     .then(r => r.json())
     .then(data => {
       if (data.success) {
         showMsg('✅ ' + data.message, true);
-        const pts = Number(data.points) || 0;
-        document.getElementById('ptsNum').textContent = pts.toLocaleString('en-IN');
-        document.getElementById('fill').style.width = Math.min(pts / SHOP.goal * 100, 100) + '%';
-        const left = Math.max(SHOP.goal - pts, 0);
-        document.getElementById('remain').textContent = left > 0
-          ? '🎯 ' + left + ' more points to unlock ₹' + SHOP.discount + ' off.'
-          : '🎉 Congratulations! You can redeem ₹' + SHOP.discount + ' off on your next purchase.';
-        result.style.display = 'block';
+        otpEntry.hidden = false;
+        document.getElementById('otpCode').focus();
       } else {
         result.style.display = 'none';
         showMsg('❌ ' + (data.message || 'Unable to continue. Please try again.'), false);
@@ -132,6 +141,43 @@
     .catch(() => showMsg('❌ Something went wrong. Please try again in a moment.', false))
     .finally(() => { btn.disabled = false; btn.textContent = 'Continue →'; });
   }
+  function verifyCustomerOtp() {
+    const otp = document.getElementById('otpCode').value.trim();
+    const btn = document.getElementById('verifyBtn');
+    if (!/^\d{4}$/.test(otp)) { showMsg('Enter your 4-digit OTP.', false); return; }
+    btn.disabled = true;
+    fetch('/verify-otp/', {
+      method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded','X-CSRFToken':csrfToken()},
+      body:new URLSearchParams({phone:otpPhone, otp})
+    }).then(r => r.json()).then(data => {
+      if (!data.success) { showMsg('❌ ' + (data.message || 'OTP verification failed.'), false); return; }
+      showMsg('✅ ' + data.message, true);
+      const points = Number(data.points) || 0;
+      document.getElementById('ptsNum').textContent = points.toLocaleString('en-IN');
+      document.getElementById('fill').style.width = Math.min(points / SHOP.goal * 100, 100) + '%';
+      const remaining = Math.max(SHOP.goal - points, 0);
+      document.getElementById('remain').textContent = remaining
+        ? '🎯 ' + remaining + ' more points to unlock ₹' + SHOP.discount + ' off.'
+        : '🎉 Congratulations! You can redeem ₹' + SHOP.discount + ' off on your next purchase.';
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('phone').readOnly = true;
+      otpChannel.hidden = true; otpEmail.hidden = true; otpEntry.hidden = true;
+      document.getElementById('regBtn').hidden = true;
+      document.getElementById('changeNumber').hidden = false;
+    }).catch(() => showMsg('❌ Something went wrong. Please try again.', false))
+      .finally(() => { btn.disabled = false; });
+  }
+  window.verifyCustomerOtp = verifyCustomerOtp;
+  document.getElementById('changeNumber').addEventListener('click', () => {
+    document.getElementById('phone').readOnly = false;
+    document.getElementById('phone').value = '';
+    document.getElementById('regBtn').hidden = false;
+    document.getElementById('changeNumber').hidden = true;
+    otpChannel.hidden = false; otpEntry.hidden = true;
+    document.getElementById('result').style.display = 'none';
+    showMsg('', false);
+    document.getElementById('phone').focus();
+  });
   document.getElementById('phone').addEventListener('keydown', e => {
     if (e.key === 'Enter') registerCustomer();
   });
