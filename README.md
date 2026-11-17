@@ -1,111 +1,112 @@
 # 🏫 Uniform Shop Website
- 
-A Django web application for a school uniform shop. Customers can browse their school's uniform, place orders and earn loyalty points, while the shop owner manages sales, orders and customers from a separate login-protected dashboard.
- 
-> Status: working MVP / portfolio project. Online payment gateway and OTP verification are not integrated yet (see [Limitations](#-limitations--roadmap)).
- 
+
+A school uniform shopping website built using Python and Django. Customers can select their school, view uniforms, place orders and earn reward points. The shop owner can manage orders, customers and sales through a separate dashboard.
+
 ## ✨ Features
- 
-### For customers
-* 🏫 **School-wise uniform catalog** – choose a school, filter by class, and see items with sizes, prices and photos.
-* 🛒 **Cart & checkout** – add items with a size, then place an order with name, phone, address and **Cash on Delivery / UPI**.
-* 🧾 **Bill page + PDF** – every order gets a private bill link that can be downloaded as a PDF.
-* 🎁 **Loyalty points** – earn points on every purchase and check them with just a phone number.
-* 📱 **Responsive design** – works on phones, tablets and desktops.
-### For the shop owner / staff (login required)
-* 📊 **Owner dashboard** – new orders, today's sales and customer count at a glance.
-* ➕ **Counter billing** – add a purchase by phone number (with number suggestions) and select what was bought.
-* 📦 **Order management** – update status (New → Confirmed → Delivered) and mark payments as paid. Points are added when an order is delivered.
-* 👥 **Customers & history** – search customers, view purchase history and download it as a PDF.
-* 🏫 **Schools & dress management** – add schools, dresses, sizes, prices and photos without touching code.
-* 🔔 **Notifications** – bell icon with unread count for new customers, orders and pending payments.
-* 📲 **WhatsApp points message** – a pre-filled message with purchase, points earned and remaining points opens in one click. Automatic sending via the **WhatsApp Cloud API** is built in as an optional integration (needs a Meta business account and an approved message template).
-### Points slabs
- 
-| Purchase amount | Points |
-|---|---|
+
+### 👨‍🎓 Customer Features
+- Select a school and view its uniforms.
+- Filter products by class.
+- View product images, sizes and prices.
+- Add products to cart and place orders.
+- Choose Cash on Delivery or UPI.
+- View and download bills as PDF.
+- Earn reward points on purchases.
+- Check reward points using a phone number.
+
+### 👨‍💼 Owner Features (Login Required)
+- View sales and orders on the dashboard.
+- Add new purchases and generate bills.
+- Manage customer details and purchase history.
+- Search for customers.
+- Add and manage schools and products.
+- Update order status and payment details.
+- View notifications for new customers, orders and pending payments.
+- Send purchase and reward point details through WhatsApp.
+
+## 🎁 Reward Points
+
+| Purchase Amount | Points |
+|---|---:|
 | Up to ₹100 | 20 |
 | ₹101 – ₹200 | 45 |
 | ₹201 – ₹500 | 100 |
 | Above ₹500 | 150 |
- 
-## 🔒 Security notes
-* Staff pages are restricted to staff accounts (`staff_member_required`).
-* Order prices are calculated **on the server** from the database, not trusted from the browser.
-* Basic rate limiting on registration and ordering.
-* Secrets (secret key, WhatsApp token, UPI ID) are read from environment variables, not from the code.
-## 🛠️ Tech Stack
- 
-* **Backend:** Python, Django
-* **Frontend:** HTML, CSS, JavaScript (no framework)
-* **Database:** SQLite
-* **PDF:** ReportLab
-* **Integration:** WhatsApp Cloud API (optional)
-## 🚀 Installation & Setup
- 
+
+## 🛠️ Technologies Used
+
+- Python
+- Django
+- HTML, CSS, JavaScript
+- SQLite
+- ReportLab (PDF generation)
+- WhatsApp Cloud API (Optional)
+
+## 🚀 Installation
+
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/Raghavbhola/uniform_shop_django.git
 cd uniform_shop_django
 ```
- 
-2. Create and activate a virtual environment:
+
+2. Create a virtual environment:
+
 ```bash
 python -m venv venv
-venv\Scripts\activate        # Windows
-source venv/bin/activate     # macOS / Linux
 ```
- 
-3. Install dependencies:
+
+3. Activate it on Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+4. Install required packages:
+
 ```bash
 pip install -r requirements.txt
 ```
- 
-4. Apply database migrations:
+
+5. Apply migrations:
+
 ```bash
 python manage.py migrate
 ```
- 
-5. Create an owner (admin) account:
+
+6. Create an admin account:
+
 ```bash
 python manage.py createsuperuser
 ```
- 
-6. Start the development server:
+
+7. Start the server:
+
 ```bash
 python manage.py runserver
 ```
- 
-7. Open the app:
-   * Customer website: `http://127.0.0.1:8000/`
-   * Owner dashboard (login required): `http://127.0.0.1:8000/dashboard/`
-8. In the dashboard, open **Schools & Dress** and add your schools and items. The customer site is empty until you do.
-### Optional environment variables
- 
-| Variable | Purpose |
-|---|---|
-| `DJANGO_SECRET_KEY` | Secret key for production |
-| `DJANGO_DEBUG` | Set to `0` in production |
-| `DJANGO_HOST` | Your domain, e.g. `username.pythonanywhere.com` |
-| `SHOP_UPI_ID` | Shop UPI ID shown on the bill for UPI payments |
-| `WA_TOKEN`, `WA_PHONE_ID` | WhatsApp Cloud API credentials (optional) |
- 
-Shop name, phone, address and WhatsApp number are configured in `SHOP_INFO` in `settings.py` and in the `SHOP` object in `shop/static/shop/js/app.js`.
- 
+
+8. Open the website:
+
+- Customer Website: http://127.0.0.1:8000/
+- Owner Dashboard: http://127.0.0.1:8000/dashboard/
+
+Add schools and products from the owner dashboard before using the customer website.
+
 ## 📸 Screenshots
- 
-_Add screenshots here: home page, school-wise uniform list, cart/checkout, bill, owner dashboard._
- 
-## ⚠️ Limitations & Roadmap
- 
-* No payment gateway yet: for UPI orders the staff verifies the payment manually and marks it as paid.
-* Discount redemption (1,000 points) is done manually by the shopkeeper.
-* No OTP verification: points can be checked with a phone number alone.
-* Automatic WhatsApp sending needs a verified Meta business account; until then the one-click message link is used.
-* Planned: payment gateway, OTP login, automatic discount redemption, automated tests.
+
+Screenshots of the website will be added here.
+
+## ⚠️ Current Limitations
+
+- UPI payments are checked manually by the shop owner.
+- OTP verification is not available.
+- Reward point discounts are applied manually.
+- Automatic WhatsApp messages require a verified Meta business account.
+
 ## 👨‍💻 Developer
- 
+
 **Raghav Bhola**
- 
-* GitHub: [Raghavbhola](https://github.com/Raghavbhola)
- 
+
+GitHub: https://github.com/Raghavbhola
